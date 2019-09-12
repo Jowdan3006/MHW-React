@@ -1,0 +1,73 @@
+body {
+  font-family: sans-serif;
+}
+
+header {
+  background-color: #B29266;
+  margin-bottom: 2rem;
+  a {
+    color: #A75A26;
+    &.active {
+      color: green;
+    }
+    &:hover {
+      color: red;
+      &.active {
+        color: purple;
+      }
+    }
+  }
+}
+
+.monsterFull {
+  .elements, .ailments, .resistances {
+    img {
+      width: 1rem;
+    }
+  }
+
+  .elements, .ailments {
+    i {
+      color: gold;
+    }
+  }
+
+  .resistances {
+    i {
+      color: red;
+    }
+  }
+}
+
+.monsterList {
+  .form-inline {
+    margin-bottom: 2rem;
+  }
+}
+
+.rarity {
+  position: relative;
+  font-family: "icomoon";
+  font-size: 2rem;
+  span span {
+    position: absolute;
+    left: 0;
+  }
+}
+
+$rarityColors: (
+  1 : #929292,
+  2 : #e4e4e4,
+  3 : #a0b558,
+  4 : #5a9953,
+  5 : #679396,
+  6 : #5472e0,
+  7 : #b38ef5,
+  8 : #c27151
+);
+
+@each $rarity, $color in $rarityColors {
+  .rarity-#{$rarity} span span{
+    color: $color;
+  }
+}

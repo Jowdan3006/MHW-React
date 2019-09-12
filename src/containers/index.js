@@ -1,48 +1,51 @@
 import React, { Component } from "react";
 import {
   Route,
-  NavLink,
   HashRouter
 } from "react-router-dom";
+
+import Header from "../components/Header";
 import MonsterList from "../components/MonsterList";
-import Stuff from "../components/Stuff";
+import Loadouts from "../components/Loadouts/";
 import Contact from "../components/Contact";
 
 class Main extends Component {
+  
   state = {
-      monsters: []
+      monsters: [],
+      isFetching: true
   }
 
   componentDidMount(){
     fetch('https://mhw-db.com/monsters')
       .then(response => response.json())
-      .then(responseData => this.setState({monsters: responseData}))
+      .then(responseData => this.setState(({monsters: responseData, isFetching: false})))
       .catch(error => console.log("Error while fetching data", error));
+    console.log("Main Mounted");
+  }
+
+  getMonsterDataById = (id) => {
+    return (
+      this.state.monsters.filter(monster => String(monster.id) === id)[0]
+    );
   }
 
   render() {
-    console.log(this.state.monsters);
+    console.log("Main Render");
     return (
       <HashRouter>
-        <header>
-          <nav className="navbar navbar-expand-lg">
-              <NavLink exact to="/" className="navbar-brand">MHW-React</NavLink>
-              <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span className="navbar-toggler-icon"></span>
-              </button>
-              <div className="collapse navbar-collapse" id="navbarNav">
-                <ul className="navbar-nav mr-auto">
-                  <li className="nav-item"><NavLink to="/stuff">Stuff</NavLink></li>
-                  <li className="nav-item"><NavLink to="/contact">Contact</NavLink></li>
-                </ul>
-            </div>
-          </nav>
-        </header>
-          <div className="content">
-            <Route exact path="/" render={() => <MonsterList data={this.state.monsters} />} />
-            <Route path="/stuff" component={Stuff}/>
-            <Route path="/contact" component={Contact}/>
-          </div>
+        <Header />
+        <div className="content">
+          <Route path="/MonsterList" render={() => 
+            <MonsterList 
+              monsters={this.state.monsters} 
+              isFetching={this.state.isFetching} 
+              getMonsterDataById={this.getMonsterDataById}
+            />} 
+          />
+          <Route path="/Loadouts" component={Loadouts}/>
+          <Route path="/contact" component={Contact}/>
+        </div>
       </HashRouter>
     );
   }
