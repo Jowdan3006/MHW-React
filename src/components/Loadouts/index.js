@@ -83,7 +83,7 @@ class Loadouts extends Component {
     let pieces = piece + 'Pieces';
     this.setState({[pieces + 'IsFetching']: true})
     console.log(pieces + "IsFetching")
-    fetch(`https://mhw-db.com/armor/?q={"type": "${piece}"}`, { mode: 'no-cors' })
+    fetch(`https://mhw-db.com/armor/?q={"type": "${piece}"}`, { mode: 'cors' })
       .then(response => response.json())
       .then(responseData => this.setState({ [pieces]: responseData, [pieces + 'IsFetched']: true}))
       .then(() => console.log(pieces + "Fetched", this.state[pieces]))
@@ -95,7 +95,7 @@ class Loadouts extends Component {
       console.log("SkillsIsFetching")
       this.setState({skillsIsFetching: true})
       let skills = [];
-      fetch(`https://mhw-db.com/skills/`, { mode: 'no-cors' })
+      fetch(`https://mhw-db.com/skills/`, { mode: 'cors' })
         .then(response => response.json())
         .then(responseData => {
           responseData.forEach(skill => skills.push({id: skill.id, level: 0, skill: skill}))
