@@ -4,6 +4,8 @@ import {
   NavLink
 } from "react-router-dom";
 
+import axios from 'axios';
+
 import ArmorPieces from './ArmorPieces';
 import EquippedArmor from './EquippedArmor';
 import PieceTile from './PieceTile';
@@ -81,11 +83,10 @@ class Loadouts extends Component {
 
   getPiecesFor = (piece) => {
     let pieces = piece + 'Pieces';
-    this.setState({[pieces + 'IsFetching']: true})
-    console.log(pieces + "IsFetching")
-    fetch(`/armor/?q={"type": "${piece}"}`)
-      .then(response => response.json())
-      .then(responseData => this.setState({ [pieces]: responseData, [pieces + 'IsFetched']: true}))
+    this.setState({[pieces + 'IsFetching']: true});
+    console.log(pieces + "IsFetching");
+    axios.get(`https://mhw-db.com/armor/?q={"type": "${piece}"}`)
+      .then(response => this.setState({ [pieces]: response.data, [pieces + 'IsFetched']: true}))
       .then(() => console.log(pieces + "Fetched", this.state[pieces]))
       .catch(error => console.log("Error while fetching data", error));
   }
@@ -95,10 +96,9 @@ class Loadouts extends Component {
       console.log("SkillsIsFetching")
       this.setState({skillsIsFetching: true})
       let skills = [];
-      fetch(`/skills/`)
-        .then(response => response.json())
-        .then(responseData => {
-          responseData.forEach(skill => skills.push({id: skill.id, level: 0, skill: skill}))
+      axios.get(`https://mhw-db.com/skills/`)
+        .then(response => {
+          response.data.forEach(skill => skills.push({id: skill.id, level: 0, skill: skill}))
         })
         .then(() => this.setState({skills: skills, skillsIsFetching: false, skillsIsFetched: true}))
         .then(() => console.log("SkillsFetched", this.state.skills))
