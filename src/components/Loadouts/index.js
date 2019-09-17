@@ -85,7 +85,7 @@ class Loadouts extends Component {
     let pieces = piece + 'Pieces';
     this.setState({[pieces + 'IsFetching']: true});
     console.log(pieces + "IsFetching");
-    axios.get(`https://mhw-db.com/armor/?q={"type": "${piece}"}`)
+    axios.get(`https://mhw-db.com/armor/?q={"type": "${piece}"}`, {mode: 'no-cors'})
       .then(response => this.setState({ [pieces]: response.data, [pieces + 'IsFetched']: true}))
       .then(() => console.log(pieces + "Fetched", this.state[pieces]))
       .catch(error => console.log("Error while fetching data", error));
@@ -96,7 +96,7 @@ class Loadouts extends Component {
       console.log("SkillsIsFetching")
       this.setState({skillsIsFetching: true})
       let skills = [];
-      axios.get(`https://mhw-db.com/skills/`)
+      axios.get(`https://mhw-db.com/skills/`, {mode: 'no-cors'})
         .then(response => {
           response.data.forEach(skill => skills.push({id: skill.id, level: 0, skill: skill}))
         })
