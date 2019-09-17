@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 
 const Header = () => {
   return (
-    <header>
+    <header className="b-shadow-75 t-border">
     <div className="container">
       <nav className="navbar navbar-expand-lg">
           <NavLink exact to="/" className="navbar-brand">MHW-React</NavLink>

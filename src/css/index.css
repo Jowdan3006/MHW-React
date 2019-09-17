@@ -1,14 +1,60 @@
 body {
-  font-family: sans-serif;
+  font-family: 'Lato', sans-serif;
+}
+
+#root {
+  overflow: hidden;
+  min-height: 100vh;
+}
+
+.backgroundMain {
+  background-image: url("/img/background-main3.png");
+  background-size: cover;
+  z-index: -10;
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.t-border {
+  text-shadow: 2px 0px #000, -2px 0px #000, 0px 2px #000, 0px -2px #000;
+}
+
+.b-shadow-50 {
+  background-color: rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: 0 0 1rem 1rem rgba(0, 0, 0, 0.5);
+          box-shadow: 0 0 1rem 1rem rgba(0, 0, 0, 0.5);
+}
+
+.b-shadow-75 {
+  background-color: rgba(0, 0, 0, 0.75);
+  -webkit-box-shadow: 0 0 0.5rem 0.5rem rgba(0, 0, 0, 0.75);
+          box-shadow: 0 0 0.5rem 0.5rem rgba(0, 0, 0, 0.75);
+}
+
+.tri-border {
+  background: -webkit-gradient(linear, left bottom, left top, color-stop(25%, #171717), to(#232323));
+  background: linear-gradient(0deg, #171717 25%, #232323);
+  border-radius: 4px;
+  -webkit-box-shadow: 0px 0px 0px 2px #171717 inset ,0px 0px 0px 4px #343434 inset;
+          box-shadow: 0px 0px 0px 2px #171717 inset ,0px 0px 0px 4px #343434 inset;
+  border: solid 3px #555555;
 }
 
 header {
-  background-color: #B29266;
+  width: 100vw;
+  z-index: 10;
+  position: relative;
   margin-bottom: 2rem;
+  margin-top: 6px;
+  font-family: 'lora';
+  font-size: 1.33rem;
 }
 
 header a {
-  color: #A75A26;
+  color: #73c0d2;
 }
 
 header a.active {
@@ -16,11 +62,52 @@ header a.active {
 }
 
 header a:hover {
-  color: red;
+  color: #9ad1de;
 }
 
 header a:hover.active {
-  color: purple;
+  color: #00b300;
+}
+
+header::before, header::after {
+  z-index: 5;
+  content: '';
+  position: absolute;
+  display: block;
+  width: 100%;
+  height: 2px;
+  left: 0;
+  -webkit-box-shadow: 0 0 2px 2px rgba(76, 175, 198, 0.1);
+          box-shadow: 0 0 2px 2px rgba(76, 175, 198, 0.1);
+}
+
+header::before {
+  top: -4px;
+  background: -webkit-gradient(linear, left top, right top, from(rgba(0, 0, 0, 0)), color-stop(15%, rgba(115, 192, 210, 0.5)), color-stop(85%, rgba(115, 192, 210, 0.5)), to(rgba(0, 0, 0, 0)));
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, rgba(115, 192, 210, 0.5) 15%, rgba(115, 192, 210, 0.5) 85%, rgba(0, 0, 0, 0) 100%);
+}
+
+header::after {
+  bottom: -4px;
+  background: -webkit-gradient(linear, left top, right top, from(rgba(0, 0, 0, 0)), color-stop(15%, rgba(115, 192, 210, 0.38)), color-stop(85%, rgba(115, 192, 210, 0.38)), to(rgba(0, 0, 0, 0)));
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, rgba(115, 192, 210, 0.38) 15%, rgba(115, 192, 210, 0.38) 85%, rgba(0, 0, 0, 0) 100%);
+}
+
+header .container {
+  position: relative;
+}
+
+header .container::before {
+  content: '';
+  position: absolute;
+  display: block;
+  height: 100%;
+  width: 250px;
+  left: -110px;
+  background-image: url("/img/general/Header-sapphire.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .monsterFull .elements img, .monsterFull .ailments img, .monsterFull .resistances img {
@@ -39,15 +126,232 @@ header a:hover.active {
   margin-bottom: 2rem;
 }
 
-.rarity {
+.equippedArmor .EquippedPiece {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin-bottom: 1rem;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.equippedArmor .EquippedPiece p {
+  color: #ddd;
+  margin: 0 1rem;
+  font-size: 1.33rem;
+}
+
+.equippedSkills,
+.armorPieceSkills {
+  text-align: left;
+  font-family: 'Lato', sans-serif;
+  color: #ddd;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+.equippedSkills .skillTile,
+.armorPieceSkills .skillTile {
+  max-width: 350px;
+  background-image: url("/img/general/skill-top.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.equippedSkills .skillTile .skillContent,
+.armorPieceSkills .skillTile .skillContent {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  border-bottom: #262626 dashed 3px;
+}
+
+.equippedSkills .skillTile .skillContent:first-child,
+.armorPieceSkills .skillTile .skillContent:first-child {
+  border-top: #262626 dashed 3px;
+}
+
+.equippedSkills .skillTile .skillContent p,
+.armorPieceSkills .skillTile .skillContent p {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.equippedSkills .skillTile .skillContent .skillInfo,
+.armorPieceSkills .skillTile .skillContent .skillInfo {
+  width: 100%;
+}
+
+.equippedSkills .skillTile .skillContent .skillInfo .skillBar,
+.armorPieceSkills .skillTile .skillContent .skillInfo .skillBar {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  height: 1.25rem;
+}
+
+.equippedSkills .skillTile .skillContent .skillInfo .skillBar p,
+.armorPieceSkills .skillTile .skillContent .skillInfo .skillBar p {
+  font-size: 1rem;
+  line-height: 1.25;
+  padding-right: 1rem;
+}
+
+.equippedSkills .skillTile .skillContent .skillInfo .skillBar .skillBarIcons,
+.armorPieceSkills .skillTile .skillContent .skillInfo .skillBar .skillBarIcons {
+  -webkit-box-flex: 2;
+      -ms-flex-positive: 2;
+          flex-grow: 2;
+  background-image: url("/img/general/Skill-bar.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  padding-left: 2rem;
+}
+
+.equippedSkills .skillTile .skillContent .skillInfo .skillBar .skillBarIcons img,
+.armorPieceSkills .skillTile .skillContent .skillInfo .skillBar .skillBarIcons img {
+  width: 1rem;
+}
+
+.equippedSkills .skillTile .skillContent .skillIcon,
+.armorPieceSkills .skillTile .skillContent .skillIcon {
+  font-family: 'icomoon';
+  position: relative;
+  font-size: 2.5rem;
+  width: 5rem;
+  padding-left: 1rem;
+  margin-top: .5rem;
+}
+
+.equippedSkills .skillTile .skillContent .skillIcon span,
+.armorPieceSkills .skillTile .skillContent .skillIcon span {
+  position: absolute;
+  left: 1rem;
+  color: #222;
+}
+
+.currentEquipped {
+  font-family: 'Russo one','Lato', sans-serif;
+  color: green;
+  position: absolute;
+  bottom: -16px;
+  right: -8px;
+  font-size: 1.5rem;
+}
+
+.armorPieces {
+  margin-bottom: 2rem;
+  font-size: .85rem;
+}
+
+.armorPieces input {
+  background: none;
+  border: none;
+  border-bottom: 1px solid #ccc;
+  font-size: 1.25rem;
+  margin-bottom: .5rem;
+  color: #ccc;
+}
+
+.armorPieces input:focus {
+  outline: none;
+}
+
+.armorPieces h2 {
+  background-image: url("/img/general/Equipment-list-top.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  font-family: 'Lora';
+  font-weight: 700;
+  color: #73c0d2;
+  font-size: 2rem;
+  padding-top: 2.5rem;
+  height: 7rem;
+  text-align: center;
+}
+
+.armorPieces .row {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.armorPieces .row p {
+  margin: 0 0 .25rem 0;
+  color: #ccc;
+}
+
+.armorPieces .pieceTile {
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.armorPieces .pieceTile button {
+  color: #ddd;
+}
+
+.armorPieces .pieceTile form {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.armorPieces .pieceTile form button {
+  color: #946f6d;
+}
+
+.armorPieces .pieceTile form button:hover {
+  color: #b88785;
+}
+
+.armorIcon {
   position: relative;
   font-family: "icomoon";
   font-size: 2rem;
+  width: 3.25rem;
+  text-align: center;
 }
 
-.rarity span span {
+.armorIcon span span {
   position: absolute;
-  left: 0;
+  left: 7px;
+}
+
+.armorIcon .pieceTileInfo {
+  display: none;
+}
+
+.armorIcon:hover {
+  cursor: default;
+}
+
+.armorIcon:hover .pieceTileInfo {
+  z-index: 100;
+  display: block;
+  position: absolute;
+  top: 0;
+  right: -100%;
+  width: 500px;
 }
 
 .rarity-1 span span {

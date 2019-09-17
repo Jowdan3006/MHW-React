@@ -1,20 +1,107 @@
+$textHighlight: #73c0d2;
+$textHighlightSec: #df8021;
+$textMain: #ddd;
+$greyPri: #262626;
+$greySec: #0a0a0a;
+
+
 body {
-  font-family: sans-serif;
+  font-family: 'Lato', sans-serif;
+}
+
+#root {
+  overflow: hidden;
+  min-height: 100vh;
+}
+
+.backgroundMain {
+  background-image: url("/img/background-main3.png");
+  background-size: cover;
+  z-index: -10;
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.t-border {
+  text-shadow:
+  2px 0px #000,
+  -2px 0px #000,
+  0px 2px #000,
+  0px -2px #000;
+}
+
+.b-shadow-50 {
+  background-color: rgba(0,0,0,.5);
+  box-shadow: 0 0 1rem 1rem rgba(0,0,0,.5);
+}
+
+.b-shadow-75 {
+  background-color: rgba(black,.75);
+  box-shadow: 0 0 .5rem .5rem rgba(black,.75);
+}
+
+.tri-border {
+  background: linear-gradient(0deg, #171717 25%, #232323);
+  border-radius: 4px;
+  box-shadow: 0px 0px 0px 2px #171717 inset ,0px 0px 0px 4px #343434 inset;
+  border: solid 3px #555555;
 }
 
 header {
-  background-color: #B29266;
+  width: 100vw;
+  z-index: 10;
+  position: relative;
   margin-bottom: 2rem;
+  margin-top: 6px;
+  font-family: 'lora';
+  font-size: 1.33rem;
   a {
-    color: #A75A26;
+    color: $textHighlight;
     &.active {
       color: green;
     }
     &:hover {
-      color: red;
+      color: lighten($textHighlight, 10%);
       &.active {
-        color: purple;
+        color: lighten(green, 10%);
       }
+    }
+  }
+  &::before,
+  &::after {
+    z-index: 5;
+    content: '';
+    position: absolute;
+    display: block;
+    width: 100%;
+    height: 2px;
+    left: 0;
+    box-shadow: 0 0 2px 2px rgba(darken($textHighlight, 10%),.1);
+  }
+  &::before {
+    top: -4px;
+    background: linear-gradient(90deg, rgba(0,0,0,0) 0% , rgba($textHighlight, .5) 15%,rgba($textHighlight, .5) 85% , rgba(0,0,0,0) 100%)
+  }
+  &::after {
+    bottom: -4px;
+    background: linear-gradient(90deg, rgba(0,0,0,0) 0% , rgba($textHighlight, .38) 15%,rgba($textHighlight, .38) 85% , rgba(0,0,0,0) 100%)
+  }
+  .container {
+    position: relative;
+    &::before {
+      content: '';
+      position: absolute;
+      display: block;
+      height: 100%;
+      width: 250px;
+      left: -110px;
+      background-image: url('/img/general/Header-sapphire.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
     }
   }
 }
@@ -45,13 +132,171 @@ header {
   }
 }
 
-.rarity {
+.equippedArmor {
+  .EquippedPiece {
+    display: flex;
+    margin-bottom: 1rem;
+    align-items: center;
+    p {
+      color: $textMain;
+      margin: 0 1rem;
+      font-size: 1.33rem;
+    }
+  }
+}
+
+.equippedSkills,
+.armorPieceSkills {
+  text-align: left;
+  font-family: 'Lato', sans-serif;
+  color: $textMain;
+  display: flex;
+  flex-direction: column;
+  .skillTile {
+    max-width: 350px;
+    background-image: url("/img/general/skill-top.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    .skillContent {
+      display: flex;
+      align-items: center;
+      border-bottom: $greyPri dashed 3px;
+      &:first-child {
+        border-top: $greyPri dashed 3px;      
+      }
+      p {
+        margin: 0;
+        font-size: 1.25rem;
+      }
+      .skillInfo {
+        width: 100%;
+        .skillBar{
+          display: flex;
+          height: 1.25rem;
+          p {
+            font-size: 1rem;
+            line-height: 1.25;
+            padding-right: 1rem;
+          }
+          .skillBarIcons {
+            flex-grow: 2;
+            background-image: url('/img/general/Skill-bar.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            display: flex;
+            align-items: center;
+            padding-left: 2rem;
+            img {
+              width: 1rem;
+            }
+          }
+        }
+      }
+      .skillIcon {
+        font-family: 'icomoon';
+        position: relative;
+        font-size: 2.5rem;
+        width: 5rem;
+        padding-left: 1rem;
+        margin-top: .5rem;
+        span {
+          position: absolute;
+          left: 1rem;
+          color: #222;
+        }
+      }
+    }
+  }
+}
+
+.currentEquipped {
+  font-family: 'Russo one','Lato', sans-serif;
+  color: green;
+  position: absolute;
+  bottom: -16px;
+  right: -8px;
+  font-size: 1.5rem;
+}
+
+.armorPieces {
+  margin-bottom: 2rem;
+  input {
+    background: none;
+    border: none;
+    border-bottom: 1px solid #ccc;
+    font-size: 1.25rem;
+    margin-bottom: .5rem;
+    color: #ccc;
+    &:focus {
+      outline: none;
+    }
+  }
+  h2 {
+    background-image: url("/img/general/Equipment-list-top.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    font-family: 'Lora';
+    font-weight: 700;
+    color: $textHighlight;
+    font-size: 2rem;
+    padding-top: 2.5rem;
+    height: 7rem;
+    text-align: center;
+  }
+  .row {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    p {
+      margin: 0 0 .25rem 0;
+      color: #ccc;
+    }
+  }
+  font-size: .85rem;
+  .pieceTile {
+    margin-bottom: 1rem;
+    position: relative;
+    button {
+      color: $textMain;
+    }
+    form {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      button {
+        color: #946f6d;
+        &:hover {
+          color: #b88785;
+        }
+      }
+    }
+  }
+}
+
+.armorIcon {
   position: relative;
   font-family: "icomoon";
   font-size: 2rem;
+  width: 3.25rem;
+  text-align: center;
   span span {
     position: absolute;
-    left: 0;
+    left: 7px;
+  }
+  .pieceTileInfo {
+    display: none;
+  }
+  &:hover {
+    cursor: default;
+    .pieceTileInfo {
+      z-index: 100;
+      display: block;
+      position: absolute;
+      top: 0;
+      right: -100%;
+      width: 500px;
+      .armorPiecesSkills {
+      }
+    }
   }
 }
 

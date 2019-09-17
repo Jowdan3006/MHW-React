@@ -5,7 +5,9 @@ import {
 } from "react-router-dom";
 
 import ArmorPieces from './ArmorPieces';
+import EquippedArmor from './EquippedArmor';
 import PieceTile from './PieceTile';
+import EquippedSkills from './EquippedSkills';
 
 class Loadouts extends Component {
 
@@ -35,74 +37,150 @@ class Loadouts extends Component {
     legsPiecesIsFetched: false,
     legsPiece: null,
 
+    skills: [],
+    skillsIsFetching: false,
+    skillsIsFetched: false,
+
+    types: ['head', 'chest', 'gloves', 'waist', 'legs'],
     value: '',
-    rank: "low"
+    rank: "high",
+    gender: "male"
   }
 
   componentDidMount() {
     console.log("Loadout Mounted");
   }
 
+  getArmorPieces() {
+    let armorPieces = [];
+    this.state.types.forEach(
+      (type, index) => {
+        let capitalType = type.charAt(0).toUpperCase() + type.slice(1);
+        armorPieces.push (
+          <Route key={index} path={`${this.props.match.path}/${capitalType}Pieces`} render={() => 
+            <ArmorPieces 
+              getPiecesFor={this.getPiecesFor}
+              getPiecesTiles={this.getPiecesTiles}
+              searchField={this.searchField}
+              PiecesIsFetching={this.state[type + 'PiecesIsFetching']}
+              PiecesIsFetched={this.state[type + 'PiecesIsFetched']}
+              PiecesLength={this.state[type + 'Pieces'].length}
+              value={this.state.value}
+              armorType={type}
+              armorTypeCapital={capitalType}
+              getSkills={this.getSkills}
+              skillsIsFetching={this.skillsIsFetching}
+              skillsIsFetched={this.skillsIsFetched}
+            />} 
+          />
+        )
+      }
+    )
+    return armorPieces;
+  }
+
   getPiecesFor = (piece) => {
     let pieces = piece + 'Pieces';
     this.setState({[pieces + 'IsFetching']: true})
-    console.log(piece + "fetching")
+    console.log(pieces + "IsFetching")
     fetch(`https://mhw-db.com/armor/?q={"type": "${piece}"}`)
       .then(response => response.json())
       .then(responseData => this.setState({ [pieces]: responseData, [pieces + 'IsFetched']: true}))
-      .then(() => console.log(piece + "fetched", this.state.headPieces))
+      .then(() => console.log(pieces + "Fetched", this.state[pieces]))
       .catch(error => console.log("Error while fetching data", error));
   }
 
-  getPiecesTiles = (piece) => {
-    let pieces = []
-    switch (piece) {
-      case "head":
-        pieces = this.state.headPieces;
-        break;
-      case "chest":
-        pieces = this.state.chestPieces;
-        break;
-      case "gloves":
-        pieces = this.state.glovesPieces;
-        break;
-      case "waist":
-        pieces = this.state.waistPieces;
-        break;
-      case "legs":
-        pieces = this.state.legsPieces;
-        break;
-      default:
-        break;
+  getSkills = () => {
+    if (this.state.skillsIsFetching === false && this.state.skillsIsFetched === false) {
+      console.log("SkillsIsFetching")
+      this.setState({skillsIsFetching: true})
+      let skills = [];
+      fetch(`https://mhw-db.com/skills/`)
+        .then(response => response.json())
+        .then(responseData => {
+          responseData.forEach(skill => skills.push({id: skill.id, level: 0, skill: skill}))
+        })
+        .then(() => this.setState({skills: skills, skillsIsFetching: false, skillsIsFetched: true}))
+        .then(() => console.log("SkillsFetched", this.state.skills))
+        .catch(error => console.log("Error while fetching data", error));
+      }
     }
-    let pieceTiles = pieces.filter((currentPiece) => currentPiece.name.toLowerCase().includes(this.state.value) && currentPiece.rank === this.state.rank)
+        
+
+  getPiecesTiles = (piece) => {
+    let pieces = this.state[piece + 'Pieces'];
+    let pieceTiles = pieces.filter((currentPiece, index) => currentPiece.name.toLowerCase().includes(this.state.value.toLowerCase()) && currentPiece.rank === this.state.rank && index < 70)
       .map((piece) => 
         <PieceTile 
           key={piece.id}
-          rarity={piece.rarity}
-          name={piece.name}
-          type={piece.type}
-          equipArmor={this.equipArmor}
+          piece={piece}
+          equipArmor={this.equipArmor.bind(this, piece)}
+          equipped={this.state[piece.type + "Piece"] === null ? null : this.state[piece.type + "Piece"]}
+          skills = {this.state.skills}
         />
       )
     return pieceTiles;
   }
 
-  searchField = this.searchField.bind(this);
-  searchField(event) {
-    this.setState({ value : event.target.value});
+  searchField = (event) => {
+    this.setState({ value: event.target.value});
   }
 
-  equipArmor = this.equipArmor.bind(this);
-  equipArmor(event, armorType) {
-    this.setState({ [armorType + "Piece"] : event.target.value});
+  equipArmor(piece, event) {
+    if (this.state.skills.length !== 0) {
+      let skills = this.state.skills;
+      if (this.state[piece.type + "Piece"] !== null) {
+        console.log(`${piece.type}Piece Found`, this.state[piece.type + "Piece"]);
+        console.log(`Replacing ${piece.type}Piece`, piece);
+        skills = this.updateSkill(this.state[piece.type + "Piece"], true, skills);
+      }
+      if (piece.skills.length !== 0) {
+        skills = this.updateSkill(piece, false, skills);
+      }
+      this.setState({ [piece.type + "Piece"]: piece, skills: skills});
+    }
+  }
+
+  updateSkill = (piece, minus, currentSkills) => {
+    let skills = [];
+    currentSkills.forEach((stateSkill) => {
+      piece.skills.forEach(skill => {
+        if (stateSkill.id === skill.skill) {
+          let updatedLevel = minus ? (stateSkill.level - skill.level) : (stateSkill.level + skill.level);
+          stateSkill.level = updatedLevel;
+        }
+      });
+      skills.push(stateSkill);
+    });
+    console.log("New skills array", skills);
+    return skills;
+  }
+
+  updatedArmorName(name) {
+    if (name.includes("Alpha")) {
+      name = name.substring(0, name.length - 5) + "α";
+    } else if (name.includes("Beta")) {
+      name = name.substring(0, name.length - 4) + "β";
+    } else if (name.includes("Gamma")) {
+      name = name.substring(0, name.length - 5) + "γ";
+    };
+    return name;
   }
 
   render() {
     console.log("Loadout Render");
+    console.log("Current Skills", this.state.skills);
     return (
       <div className="container">
-        <h2>Loadouts</h2>
+        <div className="row">
+          <EquippedArmor 
+            equippedArmor = {{head: this.state.headPiece, chest: this.state.chestPiece, gloves: this.state.glovesPiece, waist: this.state.waistPiece, legs: this.state.legsPiece}}
+            gender = {this.state.gender}
+            updatedArmorName = {this.updatedArmorName}
+            skills = {this.state.skills}
+          />
+          <EquippedSkills skills={this.state.skills}/>
+        </div>
         <ul className="nav nav-tabs">
           <li className="nav-item">
             <NavLink className="nav-link" to="/Loadouts/HeadPieces">Head</NavLink>
@@ -120,67 +198,7 @@ class Loadouts extends Component {
             <NavLink className="nav-link" to="/Loadouts/LegsPieces">Legs</NavLink>
           </li>
         </ul>
-        <Route path={`${this.props.match.path}/HeadPieces`} render={() => 
-          <ArmorPieces 
-            getPiecesFor={this.getPiecesFor}
-            getPiecesTiles={this.getPiecesTiles}
-            searchField={this.searchField}
-            PiecesIsFetching={this.state.headPiecesIsFetching}
-            PiecesIsFetched={this.state.headPiecesIsFetched}
-            PiecesLength={this.state.headPieces.length}
-            value={this.state.value}
-            armorType="head"
-          />} 
-        />
-        <Route path={`${this.props.match.path}/ChestPieces`} render={() => 
-          <ArmorPieces 
-            getPiecesFor={this.getPiecesFor}
-            getPiecesTiles={this.getPiecesTiles}
-            searchField={this.searchField}
-            PiecesIsFetching={this.state.chestPiecesIsFetching}
-            PiecesIsFetched={this.state.chestPiecesIsFetched}
-            PiecesLength={this.state.chestPieces.length}
-            value={this.state.value}
-            armorType="chest"
-          />} 
-        />
-        <Route path={`${this.props.match.path}/GlovesPieces`} render={() => 
-          <ArmorPieces 
-            getPiecesFor={this.getPiecesFor}
-            getPiecesTiles={this.getPiecesTiles}
-            searchField={this.searchField}
-            PiecesIsFetching={this.state.glovesPiecesIsFetching}
-            PiecesIsFetched={this.state.glovesPiecesIsFetched}
-            PiecesLength={this.state.glovesPieces.length}
-            value={this.state.value}
-            armorType="gloves"
-          />} 
-        />
-        <Route path={`${this.props.match.path}/WaistPieces`} render={() => 
-          <ArmorPieces 
-            getPiecesFor={this.getPiecesFor}
-            getPiecesTiles={this.getPiecesTiles}
-            searchField={this.searchField}
-            PiecesIsFetching={this.state.waistPiecesIsFetching}
-            PiecesIsFetched={this.state.waistPiecesIsFetched}
-            PiecesLength={this.state.waistPieces.length}
-            value={this.state.value}
-            armorType="waist"
-          />} 
-        />
-        <Route path={`${this.props.match.path}/LegsPieces`} render={() => 
-          <ArmorPieces 
-            getPiecesFor={this.getPiecesFor}
-            getPiecesTiles={this.getPiecesTiles}
-            searchField={this.searchField}
-            PiecesIsFetching={this.state.legsPiecesIsFetching}
-            PiecesIsFetched={this.state.legsPiecesIsFetched}
-            PiecesLength={this.state.legsPieces.length}
-            value={this.state.value}
-            armorType="legs"
-          />} 
-        />
-
+        {this.getArmorPieces()}
       </div>
     );
   }
