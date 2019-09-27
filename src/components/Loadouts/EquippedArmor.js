@@ -1,6 +1,7 @@
 import React from 'react';
 import ArmorIcon from './ArmorIcon';
 
+import Col from 'react-bootstrap/Col';
 
 const EquippedArmor = (props) => {
 
@@ -12,14 +13,14 @@ const EquippedArmor = (props) => {
     armor => {
       if (props.equippedArmor[armor] !== null) {
         equippedArmorImage.push(
-          <span key={armor} className="EquippedPiece">
+          <span key={armor} className="equippedPiece">
             <ArmorIcon piece={props.equippedArmor[armor]} skills={props.skills} />
             <p className="t-border">{props.updatedArmorName(props.equippedArmor[armor].name)}</p>
           </span>
         );
       } else {
         equippedArmorImage.push(
-          <div key={armor} className="EquippedPiece">
+          <div key={armor} className="equippedPiece">
             <ArmorIcon piece={{type: armor, rarity: 1}} />
           </div>
         );     
@@ -42,9 +43,12 @@ const EquippedArmor = (props) => {
   );
 
   return (
-    <div className="equippedArmor col-sm-6">
+    <Col sm={4} className="equippedArmor b-shadow-50">
+      <div className="equippedHeader t-border">
+        Equipped Armor
+      </div>
       {equippedArmorImage}
-    </div>
+    </Col>
   )
 }
 

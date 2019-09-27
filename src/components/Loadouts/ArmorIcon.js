@@ -1,6 +1,7 @@
 import React from 'react';
 
 import SkillTile from './SkillTile';
+import "../../../node_modules/jquery/dist/jquery.min.js";
 
 const ArmorIcon = (props) => {
   // console.log("ArmorIcon Render");
@@ -51,7 +52,6 @@ const ArmorIcon = (props) => {
         </div>
       </div>;
   }
-
 
   return (
     <span className={`armorIcon tri-border rarity-${props.piece.rarity}`}>

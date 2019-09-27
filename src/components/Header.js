@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 
 const Header = () => {
   return (
-    <header className="b-shadow-75 t-border">
+    <header className="b-shadow-75 t-border b-tb-fade">
     <div className="container">
       <nav className="navbar navbar-expand-lg">
           <NavLink exact to="/" className="navbar-brand">MHW-React</NavLink>
@@ -14,7 +14,6 @@ const Header = () => {
             <ul className="navbar-nav mr-auto">
               <li className="nav-item"><NavLink to="/MonsterList" className="nav-link">Monster List</NavLink></li>
               <li className="nav-item"><NavLink to="/Loadouts" className="nav-link">Loadouts</NavLink></li>
-              <li className="nav-item"><NavLink to="/contact" className="nav-link">Contact</NavLink></li>
             </ul>
         </div>
       </nav>

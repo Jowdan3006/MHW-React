@@ -17,6 +17,7 @@ body {
 .backgroundMain {
   background-image: url("/img/background-main3.png");
   background-size: cover;
+  background-position: center;
   z-index: -10;
   width: 100vw;
   height: 100vh;
@@ -38,9 +39,19 @@ body {
   box-shadow: 0 0 1rem 1rem rgba(0,0,0,.5);
 }
 
+.b-shadow-50-green {
+  background-color: rgba(7,24,5,.5);
+  box-shadow: 0 0 1rem 1rem rgba(7,25,5,.5);
+}
+
 .b-shadow-75 {
   background-color: rgba(black,.75);
   box-shadow: 0 0 .5rem .5rem rgba(black,.75);
+}
+
+.b-shadow-100-grey {
+  background-color: #2d2d2d;
+  box-shadow: 0 0 .5rem .5rem #2d2d2d;
 }
 
 .tri-border {
@@ -50,29 +61,10 @@ body {
   border: solid 3px #555555;
 }
 
-header {
-  width: 100vw;
-  z-index: 10;
+.b-tb-fade {
   position: relative;
-  margin-bottom: 2rem;
-  margin-top: 6px;
-  font-family: 'lora';
-  font-size: 1.33rem;
-  a {
-    color: $textHighlight;
-    &.active {
-      color: green;
-    }
-    &:hover {
-      color: lighten($textHighlight, 10%);
-      &.active {
-        color: lighten(green, 10%);
-      }
-    }
-  }
   &::before,
   &::after {
-    z-index: 5;
     content: '';
     position: absolute;
     display: block;
@@ -83,11 +75,32 @@ header {
   }
   &::before {
     top: -4px;
-    background: linear-gradient(90deg, rgba(0,0,0,0) 0% , rgba($textHighlight, .5) 15%,rgba($textHighlight, .5) 85% , rgba(0,0,0,0) 100%)
+    background: linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba($textHighlight, .5) 15%, rgba($textHighlight, .5) 85%, rgba(0,0,0,0) 100%)
   }
   &::after {
     bottom: -4px;
-    background: linear-gradient(90deg, rgba(0,0,0,0) 0% , rgba($textHighlight, .38) 15%,rgba($textHighlight, .38) 85% , rgba(0,0,0,0) 100%)
+    background: linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba($textHighlight, .38) 15%, rgba($textHighlight, .38) 85%, rgba(0,0,0,0) 100%)
+  }
+}
+
+header {
+  width: 100vw;
+  z-index: 10;
+  margin-bottom: 2rem;
+  margin-top: 6px;
+  font-family: 'lora';
+  font-size: 1.33rem;
+  a {
+    color: $textHighlight;
+    &.active {
+      color: $textHighlightSec;
+    }
+    &:hover {
+      color: lighten($textHighlight, 10%);
+      &.active {
+        color: lighten($textHighlightSec, 10%);
+      }
+    }
   }
   .container {
     position: relative;
@@ -97,12 +110,136 @@ header {
       display: block;
       height: 100%;
       width: 250px;
+      height: 63px;
       left: -110px;
       background-image: url('/img/general/Header-sapphire.png');
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
     }
+  }
+}
+
+.loadouts {
+  nav {
+    margin-top: 2rem;
+    .nav-item {
+      width: 80px;
+      text-align: center;
+      a, button {
+        line-height: 1;
+        color: $textHighlightSec;
+        &:hover {
+          color: darken($textHighlightSec, 10%);
+        }
+        &::after {
+          content: '';
+          display: block;
+          margin: auto;
+          width: .66rem;
+          height: .66rem;
+          margin-top: .5rem;
+          transform: rotate(45deg);
+          border-radius: 2px;
+          background-color: #68390f;
+          box-shadow: 0px 0px 0px 2px #9f734c inset, 0px 0px 0px 2px #030303;
+        }
+        &.active {
+          &::after {
+            margin-top: .35rem;
+            border-radius: 3px;
+            width: 1rem;
+            height: 1rem;
+            background-color: #f59652;
+            box-shadow: 0px 0px 0px 2px #f59652 inset, 0px 0px 0px 4px #c27036 inset, 0px 0px 0px 2px #030303;
+          }
+        }
+      }
+      &:nth-of-type(6) {
+        margin-left: 4rem;
+        position: relative;
+        &::before {
+          content: '';
+          display: block;
+          position: absolute;
+          left: 0;
+          bottom: .45rem;
+          width: 200%;
+          height: 1.1rem;
+          background: linear-gradient(90deg, rgba(0,0,0,0) 0%, #333 15%, #333 85%, rgba(0,0,0,0) 100%);
+        }
+      }
+    }
+    .nav-rank {
+      width: 105px;
+      button {
+        color: $textHighlight;
+        &:hover {
+          color: darken($textHighlight, 10%);
+        }
+        background: none;
+        border: none;
+        &::after {
+          background-color: #006368;
+          box-shadow: 0px 0px 0px 2px #2a8e8e inset, 0px 0px 0px 2px #0c3839;
+        }
+        &.active {
+          &::after {
+            background-color: #21f1fb;
+            box-shadow: 0px 0px 0px 2px #21f1fb inset, 0px 0px 0px 4px #04b4b4 inset, 0px 0px 0px 2px #0c3839;
+          }
+        }
+        &:focus {
+          outline: none;
+        }
+      }
+    }
+    ul.nav {
+      border: none;
+      margin-bottom: 1rem;
+      .nav-item:first-child {
+        position: relative;
+        &::before {
+          content: '';
+          display: block;
+          position: absolute;
+          left: 0;
+          bottom: .45rem;
+          width: 500%;
+          height: 1.1rem;
+          background: linear-gradient(90deg, rgba(0,0,0,0) 0%, #333 15%, #333 85%, rgba(0,0,0,0) 100%);
+        }
+      }
+      li:last-child {
+        margin-left: auto;
+      }
+    }
+  }
+}
+
+form {
+  height: 100%;
+  input {
+    display: inline-block;
+    vertical-align: middle;
+    background: none;
+    border: none;
+    font-size: 1.25rem;
+    line-height: 1;
+    color: #ccc;
+    &:focus {
+      outline: none;
+    }
+  }
+  ::placeholder {
+    color: $textHighlight;
+  }
+  &::after {
+    content: '';
+    width: 1px;
+    height: 100%;
+    display: inline-block;
+    vertical-align: middle;
   }
 }
 
@@ -127,20 +264,43 @@ header {
 }
 
 .monsterList {
-  .form-inline {
-    margin-bottom: 2rem;
+  color: white;
+  a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 1rem;
+  }
+  input {
+    margin-left: 1rem;
   }
 }
 
-.equippedArmor {
-  .EquippedPiece {
-    display: flex;
-    margin-bottom: 1rem;
-    align-items: center;
-    p {
-      color: $textMain;
-      margin: 0 1rem;
-      font-size: 1.33rem;
+.row.equippedDetails {
+  margin: 0;
+  .equippedHeader {
+    margin: 0 -15px;
+    width: calc(100% + 30px);
+    height: 72px;
+    background-image: url("/img/general/Equipment-top.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    text-align: center;
+    line-height: 3.5;
+    font-family: 'Lora';
+    font-size: 1.25rem;
+    color: $textHighlightSec;
+  }
+  .equippedArmor {
+    .equippedPiece {
+      display: flex;
+      margin-bottom: 1rem;
+      align-items: center;
+      p {
+        color: $textMain;
+        margin: 0 1rem;
+        font-size: 1.33rem;
+      }
     }
   }
 }
@@ -153,20 +313,44 @@ header {
   display: flex;
   flex-direction: column;
   .skillTile {
+    position: relative;
     max-width: 350px;
+    margin-bottom: 7px;
     background-image: url("/img/general/skill-top.png");
+    background-image: url("/img/general/skill-top.png"), linear-gradient(90deg, rgba(0,0,0,0) 0%, #2d2d2d 10%, #2d2d2d 90%, rgba(0,0,0,0) 100%);
     background-size: contain;
     background-repeat: no-repeat;
+    &:nth-child(2)::before {
+      content: '';
+      display: block;
+      position: absolute;
+      width: 100%;
+      top: -5px;
+      border-top: $greyPri dashed 3px;
+    }
+    &::after {
+      content: '';
+      display: block;
+      position: absolute;
+      width: 100%;
+      bottom: -5px;
+      border-top: $greyPri dashed 3px;
+    }
     .skillContent {
       display: flex;
       align-items: center;
-      border-bottom: $greyPri dashed 3px;
-      &:first-child {
-        border-top: $greyPri dashed 3px;      
+      &::before {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 1.5rem;
+        background: linear-gradient(90deg, rgba(0,0,0,0) 0%, #171717 10%, #171717 90%, rgba(0,0,0,0) 100%);
+        bottom: .35rem;
       }
       p {
-        margin: 0;
+        margin: 0 0 .25rem 0;
         font-size: 1.25rem;
+        line-height: 1;
       }
       .skillInfo {
         width: 100%;
@@ -174,20 +358,24 @@ header {
           display: flex;
           height: 1.25rem;
           p {
+            z-index: 2;
             font-size: 1rem;
             line-height: 1.25;
             padding-right: 1rem;
+            width: 7rem;
           }
           .skillBarIcons {
+            z-index: 2;
             flex-grow: 2;
             background-image: url('/img/general/Skill-bar.png');
             background-size: contain;
             background-repeat: no-repeat;
             display: flex;
             align-items: center;
-            padding-left: 2rem;
+            padding-left: 1rem;
             img {
               width: 1rem;
+              margin-right: 2px;
             }
           }
         }
@@ -198,7 +386,7 @@ header {
         font-size: 2.5rem;
         width: 5rem;
         padding-left: 1rem;
-        margin-top: .5rem;
+        // margin-top: .5rem;
         span {
           position: absolute;
           left: 1rem;
@@ -206,6 +394,13 @@ header {
         }
       }
     }
+  }
+}
+
+.equippedSkills {
+  .skillContent {
+    // background-color: #2d2d2d;
+    // box-shadow: 0 0 .2rem .2rem #2d2d2d;
   }
 }
 
@@ -220,17 +415,6 @@ header {
 
 .armorPieces {
   margin-bottom: 2rem;
-  input {
-    background: none;
-    border: none;
-    border-bottom: 1px solid #ccc;
-    font-size: 1.25rem;
-    margin-bottom: .5rem;
-    color: #ccc;
-    &:focus {
-      outline: none;
-    }
-  }
   h2 {
     background-image: url("/img/general/Equipment-list-top.png");
     background-size: contain;
@@ -291,11 +475,9 @@ header {
       z-index: 100;
       display: block;
       position: absolute;
-      top: 0;
-      right: -100%;
-      width: 500px;
-      .armorPiecesSkills {
-      }
+      bottom: 3.25rem;
+      right: -300px;
+      width: 350px;
     }
   }
 }

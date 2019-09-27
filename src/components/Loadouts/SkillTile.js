@@ -13,7 +13,7 @@ const SkillTile = (props) => {
   }
   return (
     <div className="skillTile">
-      <div className="skillContent b-shadow-75">
+      <div className="skillContent">
         <span className="skillIcon">
           &#xe90a;<span>&#xe90b;</span><span>&#xe90c;</span><span>&#xe90d;</span>
         </span>

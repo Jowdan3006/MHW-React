@@ -5,15 +5,15 @@ import SkillTile from './SkillTile';
 const EquippedSkills = (props) => {
 
   let skillTiles = [];
-  props.skills.forEach((skill, index) => {
-    if (skill.level !== 0) {
-      skillTiles.push(<SkillTile key={index} skill={skill} />);
-    }
+  props.getEquippedSkills().forEach((skill, index) => {
+    skillTiles.push(<SkillTile key={index} skill={skill} />);
   })
 
   return (
-    <div className="equippedSkills col-sm-6">
-      <h2>Skills</h2>
+    <div className="equippedSkills col-sm-4 b-shadow-50-green">
+      <div className="equippedHeader t-border">
+        Skills
+      </div>
       {skillTiles}
     </div>
   );

@@ -10,6 +10,7 @@ body {
 .backgroundMain {
   background-image: url("/img/background-main3.png");
   background-size: cover;
+  background-position: center;
   z-index: -10;
   width: 100vw;
   height: 100vh;
@@ -28,10 +29,22 @@ body {
           box-shadow: 0 0 1rem 1rem rgba(0, 0, 0, 0.5);
 }
 
+.b-shadow-50-green {
+  background-color: rgba(7, 24, 5, 0.5);
+  -webkit-box-shadow: 0 0 1rem 1rem rgba(7, 25, 5, 0.5);
+          box-shadow: 0 0 1rem 1rem rgba(7, 25, 5, 0.5);
+}
+
 .b-shadow-75 {
   background-color: rgba(0, 0, 0, 0.75);
   -webkit-box-shadow: 0 0 0.5rem 0.5rem rgba(0, 0, 0, 0.75);
           box-shadow: 0 0 0.5rem 0.5rem rgba(0, 0, 0, 0.75);
+}
+
+.b-shadow-100-grey {
+  background-color: #2d2d2d;
+  -webkit-box-shadow: 0 0 .5rem .5rem #2d2d2d;
+          box-shadow: 0 0 .5rem .5rem #2d2d2d;
 }
 
 .tri-border {
@@ -43,10 +56,36 @@ body {
   border: solid 3px #555555;
 }
 
+.b-tb-fade {
+  position: relative;
+}
+
+.b-tb-fade::before, .b-tb-fade::after {
+  content: '';
+  position: absolute;
+  display: block;
+  width: 100%;
+  height: 2px;
+  left: 0;
+  -webkit-box-shadow: 0 0 2px 2px rgba(76, 175, 198, 0.1);
+          box-shadow: 0 0 2px 2px rgba(76, 175, 198, 0.1);
+}
+
+.b-tb-fade::before {
+  top: -4px;
+  background: -webkit-gradient(linear, left top, right top, from(rgba(0, 0, 0, 0)), color-stop(15%, rgba(115, 192, 210, 0.5)), color-stop(85%, rgba(115, 192, 210, 0.5)), to(rgba(0, 0, 0, 0)));
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, rgba(115, 192, 210, 0.5) 15%, rgba(115, 192, 210, 0.5) 85%, rgba(0, 0, 0, 0) 100%);
+}
+
+.b-tb-fade::after {
+  bottom: -4px;
+  background: -webkit-gradient(linear, left top, right top, from(rgba(0, 0, 0, 0)), color-stop(15%, rgba(115, 192, 210, 0.38)), color-stop(85%, rgba(115, 192, 210, 0.38)), to(rgba(0, 0, 0, 0)));
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, rgba(115, 192, 210, 0.38) 15%, rgba(115, 192, 210, 0.38) 85%, rgba(0, 0, 0, 0) 100%);
+}
+
 header {
   width: 100vw;
   z-index: 10;
-  position: relative;
   margin-bottom: 2rem;
   margin-top: 6px;
   font-family: 'lora';
@@ -58,7 +97,7 @@ header a {
 }
 
 header a.active {
-  color: green;
+  color: #df8021;
 }
 
 header a:hover {
@@ -66,31 +105,7 @@ header a:hover {
 }
 
 header a:hover.active {
-  color: #00b300;
-}
-
-header::before, header::after {
-  z-index: 5;
-  content: '';
-  position: absolute;
-  display: block;
-  width: 100%;
-  height: 2px;
-  left: 0;
-  -webkit-box-shadow: 0 0 2px 2px rgba(76, 175, 198, 0.1);
-          box-shadow: 0 0 2px 2px rgba(76, 175, 198, 0.1);
-}
-
-header::before {
-  top: -4px;
-  background: -webkit-gradient(linear, left top, right top, from(rgba(0, 0, 0, 0)), color-stop(15%, rgba(115, 192, 210, 0.5)), color-stop(85%, rgba(115, 192, 210, 0.5)), to(rgba(0, 0, 0, 0)));
-  background: linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, rgba(115, 192, 210, 0.5) 15%, rgba(115, 192, 210, 0.5) 85%, rgba(0, 0, 0, 0) 100%);
-}
-
-header::after {
-  bottom: -4px;
-  background: -webkit-gradient(linear, left top, right top, from(rgba(0, 0, 0, 0)), color-stop(15%, rgba(115, 192, 210, 0.38)), color-stop(85%, rgba(115, 192, 210, 0.38)), to(rgba(0, 0, 0, 0)));
-  background: linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, rgba(115, 192, 210, 0.38) 15%, rgba(115, 192, 210, 0.38) 85%, rgba(0, 0, 0, 0) 100%);
+  color: #e59a4e;
 }
 
 header .container {
@@ -103,11 +118,169 @@ header .container::before {
   display: block;
   height: 100%;
   width: 250px;
+  height: 63px;
   left: -110px;
   background-image: url("/img/general/Header-sapphire.png");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+}
+
+.loadouts nav {
+  margin-top: 2rem;
+}
+
+.loadouts nav .nav-item {
+  width: 80px;
+  text-align: center;
+}
+
+.loadouts nav .nav-item a, .loadouts nav .nav-item button {
+  line-height: 1;
+  color: #df8021;
+}
+
+.loadouts nav .nav-item a:hover, .loadouts nav .nav-item button:hover {
+  color: #b3671a;
+}
+
+.loadouts nav .nav-item a::after, .loadouts nav .nav-item button::after {
+  content: '';
+  display: block;
+  margin: auto;
+  width: .66rem;
+  height: .66rem;
+  margin-top: .5rem;
+  -webkit-transform: rotate(45deg);
+          transform: rotate(45deg);
+  border-radius: 2px;
+  background-color: #68390f;
+  -webkit-box-shadow: 0px 0px 0px 2px #9f734c inset, 0px 0px 0px 2px #030303;
+          box-shadow: 0px 0px 0px 2px #9f734c inset, 0px 0px 0px 2px #030303;
+}
+
+.loadouts nav .nav-item a.active::after, .loadouts nav .nav-item button.active::after {
+  margin-top: .35rem;
+  border-radius: 3px;
+  width: 1rem;
+  height: 1rem;
+  background-color: #f59652;
+  -webkit-box-shadow: 0px 0px 0px 2px #f59652 inset, 0px 0px 0px 4px #c27036 inset, 0px 0px 0px 2px #030303;
+          box-shadow: 0px 0px 0px 2px #f59652 inset, 0px 0px 0px 4px #c27036 inset, 0px 0px 0px 2px #030303;
+}
+
+.loadouts nav .nav-item:nth-of-type(6) {
+  margin-left: 4rem;
+  position: relative;
+}
+
+.loadouts nav .nav-item:nth-of-type(6)::before {
+  content: '';
+  display: block;
+  position: absolute;
+  left: 0;
+  bottom: .45rem;
+  width: 200%;
+  height: 1.1rem;
+  background: -webkit-gradient(linear, left top, right top, from(rgba(0, 0, 0, 0)), color-stop(15%, #333), color-stop(85%, #333), to(rgba(0, 0, 0, 0)));
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, #333 15%, #333 85%, rgba(0, 0, 0, 0) 100%);
+}
+
+.loadouts nav .nav-rank {
+  width: 105px;
+}
+
+.loadouts nav .nav-rank button {
+  color: #73c0d2;
+  background: none;
+  border: none;
+}
+
+.loadouts nav .nav-rank button:hover {
+  color: #4cafc6;
+}
+
+.loadouts nav .nav-rank button::after {
+  background-color: #006368;
+  -webkit-box-shadow: 0px 0px 0px 2px #2a8e8e inset, 0px 0px 0px 2px #0c3839;
+          box-shadow: 0px 0px 0px 2px #2a8e8e inset, 0px 0px 0px 2px #0c3839;
+}
+
+.loadouts nav .nav-rank button.active::after {
+  background-color: #21f1fb;
+  -webkit-box-shadow: 0px 0px 0px 2px #21f1fb inset, 0px 0px 0px 4px #04b4b4 inset, 0px 0px 0px 2px #0c3839;
+          box-shadow: 0px 0px 0px 2px #21f1fb inset, 0px 0px 0px 4px #04b4b4 inset, 0px 0px 0px 2px #0c3839;
+}
+
+.loadouts nav .nav-rank button:focus {
+  outline: none;
+}
+
+.loadouts nav ul.nav {
+  border: none;
+  margin-bottom: 1rem;
+}
+
+.loadouts nav ul.nav .nav-item:first-child {
+  position: relative;
+}
+
+.loadouts nav ul.nav .nav-item:first-child::before {
+  content: '';
+  display: block;
+  position: absolute;
+  left: 0;
+  bottom: .45rem;
+  width: 500%;
+  height: 1.1rem;
+  background: -webkit-gradient(linear, left top, right top, from(rgba(0, 0, 0, 0)), color-stop(15%, #333), color-stop(85%, #333), to(rgba(0, 0, 0, 0)));
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, #333 15%, #333 85%, rgba(0, 0, 0, 0) 100%);
+}
+
+.loadouts nav ul.nav li:last-child {
+  margin-left: auto;
+}
+
+form {
+  height: 100%;
+}
+
+form input {
+  display: inline-block;
+  vertical-align: middle;
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  line-height: 1;
+  color: #ccc;
+}
+
+form input:focus {
+  outline: none;
+}
+
+form ::-webkit-input-placeholder {
+  color: #73c0d2;
+}
+
+form :-ms-input-placeholder {
+  color: #73c0d2;
+}
+
+form ::-ms-input-placeholder {
+  color: #73c0d2;
+}
+
+form ::placeholder {
+  color: #73c0d2;
+}
+
+form::after {
+  content: '';
+  width: 1px;
+  height: 100%;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 .monsterFull .elements img, .monsterFull .ailments img, .monsterFull .resistances img {
@@ -122,11 +295,40 @@ header .container::before {
   color: red;
 }
 
-.monsterList .form-inline {
-  margin-bottom: 2rem;
+.monsterList {
+  color: white;
 }
 
-.equippedArmor .EquippedPiece {
+.monsterList a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 1rem;
+}
+
+.monsterList input {
+  margin-left: 1rem;
+}
+
+.row.equippedDetails {
+  margin: 0;
+}
+
+.row.equippedDetails .equippedHeader {
+  margin: 0 -15px;
+  width: calc(100% + 30px);
+  height: 72px;
+  background-image: url("/img/general/Equipment-top.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  text-align: center;
+  line-height: 3.5;
+  font-family: 'Lora';
+  font-size: 1.25rem;
+  color: #df8021;
+}
+
+.row.equippedDetails .equippedArmor .equippedPiece {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -136,7 +338,7 @@ header .container::before {
           align-items: center;
 }
 
-.equippedArmor .EquippedPiece p {
+.row.equippedDetails .equippedArmor .equippedPiece p {
   color: #ddd;
   margin: 0 1rem;
   font-size: 1.33rem;
@@ -158,10 +360,34 @@ header .container::before {
 
 .equippedSkills .skillTile,
 .armorPieceSkills .skillTile {
+  position: relative;
   max-width: 350px;
+  margin-bottom: 7px;
   background-image: url("/img/general/skill-top.png");
+  background-image: url("/img/general/skill-top.png"), -webkit-gradient(linear, left top, right top, from(rgba(0, 0, 0, 0)), color-stop(10%, #2d2d2d), color-stop(90%, #2d2d2d), to(rgba(0, 0, 0, 0)));
+  background-image: url("/img/general/skill-top.png"), linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, #2d2d2d 10%, #2d2d2d 90%, rgba(0, 0, 0, 0) 100%);
   background-size: contain;
   background-repeat: no-repeat;
+}
+
+.equippedSkills .skillTile:nth-child(2)::before,
+.armorPieceSkills .skillTile:nth-child(2)::before {
+  content: '';
+  display: block;
+  position: absolute;
+  width: 100%;
+  top: -5px;
+  border-top: #262626 dashed 3px;
+}
+
+.equippedSkills .skillTile::after,
+.armorPieceSkills .skillTile::after {
+  content: '';
+  display: block;
+  position: absolute;
+  width: 100%;
+  bottom: -5px;
+  border-top: #262626 dashed 3px;
 }
 
 .equippedSkills .skillTile .skillContent,
@@ -172,18 +398,24 @@ header .container::before {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  border-bottom: #262626 dashed 3px;
 }
 
-.equippedSkills .skillTile .skillContent:first-child,
-.armorPieceSkills .skillTile .skillContent:first-child {
-  border-top: #262626 dashed 3px;
+.equippedSkills .skillTile .skillContent::before,
+.armorPieceSkills .skillTile .skillContent::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 1.5rem;
+  background: -webkit-gradient(linear, left top, right top, from(rgba(0, 0, 0, 0)), color-stop(10%, #171717), color-stop(90%, #171717), to(rgba(0, 0, 0, 0)));
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, #171717 10%, #171717 90%, rgba(0, 0, 0, 0) 100%);
+  bottom: .35rem;
 }
 
 .equippedSkills .skillTile .skillContent p,
 .armorPieceSkills .skillTile .skillContent p {
-  margin: 0;
+  margin: 0 0 .25rem 0;
   font-size: 1.25rem;
+  line-height: 1;
 }
 
 .equippedSkills .skillTile .skillContent .skillInfo,
@@ -201,13 +433,16 @@ header .container::before {
 
 .equippedSkills .skillTile .skillContent .skillInfo .skillBar p,
 .armorPieceSkills .skillTile .skillContent .skillInfo .skillBar p {
+  z-index: 2;
   font-size: 1rem;
   line-height: 1.25;
   padding-right: 1rem;
+  width: 7rem;
 }
 
 .equippedSkills .skillTile .skillContent .skillInfo .skillBar .skillBarIcons,
 .armorPieceSkills .skillTile .skillContent .skillInfo .skillBar .skillBarIcons {
+  z-index: 2;
   -webkit-box-flex: 2;
       -ms-flex-positive: 2;
           flex-grow: 2;
@@ -220,12 +455,13 @@ header .container::before {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  padding-left: 2rem;
+  padding-left: 1rem;
 }
 
 .equippedSkills .skillTile .skillContent .skillInfo .skillBar .skillBarIcons img,
 .armorPieceSkills .skillTile .skillContent .skillInfo .skillBar .skillBarIcons img {
   width: 1rem;
+  margin-right: 2px;
 }
 
 .equippedSkills .skillTile .skillContent .skillIcon,
@@ -235,7 +471,6 @@ header .container::before {
   font-size: 2.5rem;
   width: 5rem;
   padding-left: 1rem;
-  margin-top: .5rem;
 }
 
 .equippedSkills .skillTile .skillContent .skillIcon span,
@@ -257,19 +492,6 @@ header .container::before {
 .armorPieces {
   margin-bottom: 2rem;
   font-size: .85rem;
-}
-
-.armorPieces input {
-  background: none;
-  border: none;
-  border-bottom: 1px solid #ccc;
-  font-size: 1.25rem;
-  margin-bottom: .5rem;
-  color: #ccc;
-}
-
-.armorPieces input:focus {
-  outline: none;
 }
 
 .armorPieces h2 {
@@ -349,9 +571,9 @@ header .container::before {
   z-index: 100;
   display: block;
   position: absolute;
-  top: 0;
-  right: -100%;
-  width: 500px;
+  bottom: 3.25rem;
+  right: -300px;
+  width: 350px;
 }
 
 .rarity-1 span span {
