@@ -5,6 +5,7 @@ import {
 } from "react-router-dom";
 
 import axios from 'axios';
+import update from 'immutability-helper';
 
 import Header from "../components/Header";
 import MonsterList from "../components/MonsterList/";
@@ -45,6 +46,20 @@ class Main extends Component {
 
     armorSearchValue: '',
     armorRank: "high",
+
+    resistanceTypes: ['fire', 'water', 'thunder', 'ice', 'dragon'],
+    equippedInfo: {
+      health: 100,
+      stamina: 100,
+      defense: 0,
+      resistances: {
+        fire: 0,
+        water: 0,
+        thunder: 0,
+        ice: 0,
+        dragon: 0
+      }
+    },
 
     monsters: [],
     monstersIsFetched: false,
@@ -121,33 +136,82 @@ class Main extends Component {
   }
 
   equipArmor(piece) {
+    let updatedSkills = null;
+    let updatedEquippedInfo = {};
     if (this.state.skills.length !== 0) {
-      let skills = this.state.skills;
       if (this.state[piece.type + "Piece"] !== null) {
         console.log(`${piece.type}Piece Found`, this.state[piece.type + "Piece"]);
         console.log(`Replacing ${piece.type}Piece`, piece);
-        skills = this.updateSkill(this.state[piece.type + "Piece"], true, skills);
+        updatedSkills = this.updateSkill(this.state[piece.type + "Piece"], true, this.state.skills);
+        if (piece.skills.length !== 0) {
+          updatedSkills = this.updateSkill(piece, false, updatedSkills);
+        }
+        updatedEquippedInfo = this.updateEquippedInfo(piece, this.state[piece.type + "Piece"], this.state.equippedInfo)
+      } else {
+        if (piece.skills.length !== 0) {
+          updatedSkills = this.updateSkill(piece, false, this.state.skills);
+        }
+        updatedEquippedInfo = this.updateEquippedInfo(piece, null, this.state.equippedInfo)
       }
-      if (piece.skills.length !== 0) {
-        skills = this.updateSkill(piece, false, skills);
+      if (updatedSkills === null) {
+        this.setState({ [piece.type + "Piece"]: piece, equippedInfo: updatedEquippedInfo});
+      } else {
+        this.setState({ [piece.type + "Piece"]: piece, skills: updatedSkills, equippedInfo: updatedEquippedInfo});
       }
-      this.setState({ [piece.type + "Piece"]: piece, skills: skills});
     }
   }
 
   updateSkill = (piece, minus, currentSkills) => {
-    let skills = [];
+    let updatedSkills = [];
     currentSkills.forEach((stateSkill) => {
+      let currentSkill = null;
       piece.skills.forEach(skill => {
         if (stateSkill.id === skill.skill) {
           let updatedLevel = minus ? (stateSkill.level - skill.level) : (stateSkill.level + skill.level);
-          stateSkill.level = updatedLevel;
+          currentSkill = update(stateSkill, {level: {$set: updatedLevel}});
+          console.log(minus, updatedLevel, currentSkill);
+          updatedSkills.push(currentSkill);
         }
       });
-      skills.push(stateSkill);
+      if (currentSkill === null) {
+          updatedSkills = update(updatedSkills, {$push: [stateSkill]});
+      }
     });
-    console.log("New skills array", skills);
-    return skills;
+    return updatedSkills;
+  }
+
+  updateEquippedInfo = (piece, oldPiece, currentEquippedInfo) => {
+    let updatedEquippedInfo = {};
+    if (oldPiece != null) {
+      updatedEquippedInfo = update(currentEquippedInfo, {$merge: {defense : currentEquippedInfo.defense - oldPiece.defense.base + piece.defense.base}});
+      this.state.resistanceTypes.forEach(resistance => {
+        updatedEquippedInfo = update(updatedEquippedInfo, 
+          {resistances: {[resistance]: {$set: updatedEquippedInfo.resistances[resistance] - oldPiece.resistances[resistance] + piece.resistances[resistance]}}}
+        );
+      });
+    } else {
+      updatedEquippedInfo = update(currentEquippedInfo, {$merge: {defense : currentEquippedInfo.defense + piece.defense.base}});
+      this.state.resistanceTypes.forEach(resistance => {
+        updatedEquippedInfo = update(updatedEquippedInfo, 
+          {resistances: {[resistance]: {$set: updatedEquippedInfo.resistances[resistance] + piece.resistances[resistance]}}}
+        );
+      });
+    }
+    // this.state.resistanceTypes.forEach(resistance => {
+    //   currentEquippedInfo.resistances[resistance] += piece.resistances[resistance];
+    // });
+    return updatedEquippedInfo;
+  }
+
+  updateEquippedInfoBySkills = (skills, oldSkills, currentEquippedInfo) => {
+    console.log("Old Skills", oldSkills);
+    console.log("New Skills", skills);
+    oldSkills.forEach(oldSkill => {
+      console.log(oldSkill);
+      if (oldSkill.level > 0 && Object.keys(oldSkill.skill.ranks[oldSkill.level - 1].modifiers).length !== 0) {
+        console.log(oldSkill);
+      }
+    })
   }
 
   getMonsters = () => {
@@ -196,6 +260,7 @@ class Main extends Component {
               skills={this.state.skills}
               skillsIsFetched={this.state.skillsIsFetched}
               armorRank={this.state.armorRank}
+              equippedInfo={this.state.equippedInfo}
               pieces={{
                 head: this.state.headPieces, 
                 chest: this.state.chestPieces, 

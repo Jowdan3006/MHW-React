@@ -6,7 +6,6 @@ import {
 
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
 
 import ArmorPieces from './ArmorPieces';
 import EquippedArmor from './EquippedArmor';
@@ -64,7 +63,7 @@ class Loadouts extends Component {
     return (
       <div className="loadouts">
         <Container>
-          <Row classname="equippedDetails">
+          <Row className="equippedDetails">
             <EquippedArmor 
               equippedArmor = {this.props.equippedArmor}
               updatedArmorName = {this.updatedArmorName}
@@ -72,6 +71,7 @@ class Loadouts extends Component {
             />
             <EquippedInfo 
               equippedArmor = {this.props.equippedArmor}
+              equippedInfo = {this.props.equippedInfo}
               getEquippedSkills = {this.props.getEquippedSkills}
             />
             <EquippedSkills 

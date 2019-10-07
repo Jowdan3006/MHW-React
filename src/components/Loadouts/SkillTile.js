@@ -1,5 +1,7 @@
 import React from 'react';
 
+import SkillTileInfo from './SkillTileInfo';
+
 const SkillTile = (props) => {
   // console.log('SkillTile Render');
 
@@ -14,8 +16,9 @@ const SkillTile = (props) => {
   return (
     <div className="skillTile">
       <div className="skillContent">
-        <span className="skillIcon">
+        <span className={`skillIcon skill-${props.skill.skill.id}`}>
           &#xe90a;<span>&#xe90b;</span><span>&#xe90c;</span><span>&#xe90d;</span>
+          <SkillTileInfo skill={props.skill} />
         </span>
         <div className="skillInfo">
           <p className="t-border">{props.skill.skill.name}</p>

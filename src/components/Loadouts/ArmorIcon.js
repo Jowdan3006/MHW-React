@@ -1,7 +1,7 @@
 import React from 'react';
 
 import SkillTile from './SkillTile';
-import "../../../node_modules/jquery/dist/jquery.min.js";
+import DefenseStatus from './DefenseStatus';
 
 const ArmorIcon = (props) => {
   // console.log("ArmorIcon Render");
@@ -46,19 +46,29 @@ const ArmorIcon = (props) => {
       );
     });
     pieceTileInfo =
-      <div className="pieceTileInfo">
+      <div className="pieceTileInfo b-shadow-75">
         <div className="armorPieceSkills">
           {skillTiles}
+          <DefenseStatus 
+            defense={props.piece.defense.base}
+            resistances={[
+              {name: 'Fire', value: props.piece.resistances.fire},
+              {name: 'Water', value: props.piece.resistances.water},
+              {name: 'Thunder', value: props.piece.resistances.thunder},
+              {name: 'Ice', value: props.piece.resistances.ice},
+              {name: 'Dragon', value: props.piece.resistances.dragon}
+            ]}
+          />
         </div>
       </div>;
   }
 
   return (
-    <span className={`armorIcon tri-border rarity-${props.piece.rarity}`}>
+    <div className={`armorIcon tri-border rarity-${props.piece.rarity}`}>
       {armorIcon}
       {equipped}
       {pieceTileInfo}
-    </span>
+    </div>
   );
 }
 

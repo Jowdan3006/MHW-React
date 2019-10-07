@@ -1,6 +1,7 @@
 $textHighlight: #73c0d2;
 $textHighlightSec: #df8021;
 $textMain: #ddd;
+$textSec: #aaa;
 $greyPri: #262626;
 $greySec: #0a0a0a;
 
@@ -276,7 +277,7 @@ form {
   }
 }
 
-.row.equippedDetails {
+.equippedDetails {
   margin: 0;
   .equippedHeader {
     margin: 0 -15px;
@@ -303,6 +304,10 @@ form {
       }
     }
   }
+}
+
+.equippedInfo {
+  color: $textMain;
 }
 
 .equippedSkills,
@@ -361,7 +366,7 @@ form {
             z-index: 2;
             font-size: 1rem;
             line-height: 1.25;
-            padding-right: 1rem;
+            padding-left: 1rem;
             width: 7rem;
           }
           .skillBarIcons {
@@ -386,7 +391,6 @@ form {
         font-size: 2.5rem;
         width: 5rem;
         padding-left: 1rem;
-        // margin-top: .5rem;
         span {
           position: absolute;
           left: 1rem;
@@ -394,13 +398,6 @@ form {
         }
       }
     }
-  }
-}
-
-.equippedSkills {
-  .skillContent {
-    // background-color: #2d2d2d;
-    // box-shadow: 0 0 .2rem .2rem #2d2d2d;
   }
 }
 
@@ -482,6 +479,33 @@ form {
   }
 }
 
+.defenseStatus {
+  h5 {
+    text-align: center;
+    color: darken($textHighlight, 15%);
+    font-family: 'lora';
+    font-weight: 300;
+    background: linear-gradient(90deg, rgba(0,0,0,0) 0%, #333 15%, #333 85%, rgba(0,0,0,0) 100%);
+    margin-bottom: 2px;
+  }
+  div {
+    border-bottom: $greyPri dashed 3px;
+  }
+  .status {
+    font-size: 1rem;
+    padding: 2px 0;
+    display: flex;
+    span {
+      flex-grow: 2;
+      padding-left: .5rem;
+      color: $textSec;
+    }
+  }
+  img {
+    width: 1.25rem;
+  }
+}
+
 $rarityColors: (
   1 : #929292,
   2 : #e4e4e4,
@@ -495,6 +519,60 @@ $rarityColors: (
 
 @each $rarity, $color in $rarityColors {
   .rarity-#{$rarity} span span{
+    color: $color;
+  }
+}
+
+$skillColors: (
+  1   : #71618e, // Poison Res
+  2   : #949547, // Paralysis Res
+  3   : #478e94, // Sleep Res
+  4   : #c7a31b, // Stun Res
+  5   : #787878, // Muck Res
+  6   : #a56c4e, // Blast Res
+  7   : #988274, // Bleed Res
+  8   : #c7a31b, // Iron Skin
+  9   : #e2e2e2, // Earplugs
+  10  : #e2e2e2, // Windproof
+  11  : #6f6f6f, // Tremor Res
+  12  : #857462, // Dungmaster
+  13  : #857462, // Effluvial Expert
+  14  : #988274, // Heat Guard
+  15  : #ac4860, // Attack Boost
+  16  : #c7a31b, // Defence Boost
+  17  : #369786, // Health Boost
+  18  : #34845d, // Recovery Up
+  19  : #34845d, // Recovery Speed
+  20  : #ac4860, // Fire Res
+  21  : #3d6cb4, // Water Res
+  22  : #c3cdcc, // Ice Res
+  23  : #968d66, // Thunder Res
+  24  : #6d273f, // Dragon Res
+  25  : #685ba1, // Blight Res
+  26  : #ac4860, // Fire Attack
+  27  : #3d6cb4, // Water Attack
+  28  : #c3cdcc, // Ice Attack
+  29  : #968d66, // Thunder Attack
+  30  : #6d273f, // Dragon Attack
+  31  : #71618e, // Poison Attack
+  32  : #949547, // Paralysis Attack
+  33  : #478e94, // Sleep Attack
+  34  : #a56c4e, // Blast Attack
+  35  : #c3cdcc, // Normal Shots
+  36  : #436ab9, // Piercing Shots
+  37  : #4f7248, // Spread/Power Shots
+  38  : #6e8b89, // Free Elem/Ammo Up
+  39  : #373598, // Critical Eye
+  40  : #443a6c, // Critical Boost
+  41  : #413982, // Weakness Exploit
+  42  : #908873, // Focus
+  43  : #908873, // Power Prolonger
+  44  : #e2e2e2, // Handicraft
+  // Need to add the rest, unless better solution is found
+);
+
+@each $skill, $color in $skillColors {
+  .skill-#{$skill} {
     color: $color;
   }
 }
