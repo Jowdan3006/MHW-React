@@ -63,7 +63,7 @@ class Loadouts extends Component {
     return (
       <div className="loadouts">
         <Container>
-          <Row className="equippedDetails">
+          <Row className="equippedDetails b-shadow-50">
             <EquippedArmor 
               equippedArmor = {this.props.equippedArmor}
               updatedArmorName = {this.updatedArmorName}
@@ -103,10 +103,9 @@ class Loadouts extends Component {
               <li className="nav-item nav-rank">
                 <button onClick={() => this.props.armorRank === "high" ? null : this.props.setArmorRank("high")} className={`nav-link ${this.props.armorRank === "high" ? "active" : ""}`}>High Rank</button>
               </li>
-              <li>
-                <form>
-                  <input placeholder="Search" aria-label="Search" type="text" value={this.props.armorSearchValue} onChange={this.props.searchArmorPieces} />
-                </form>
+              <li className="searchBar">
+                <button title="Search by skills separated by spaces" onClick={() => this.props.toggleArmorSearch()} className={`searchToggle t-border ${this.props.searchBySkill === true ? "active" : ""}`}>Search by skill</button>
+                <input placeholder="Search" aria-label="Search" type="text" value={this.props.armorSearchValue} onChange={this.props.searchArmorPieces} />
               </li>
             </ul>
           </Container>

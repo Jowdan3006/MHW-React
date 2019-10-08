@@ -19,7 +19,7 @@ const PieceTile = (props) => {
     <div className="pieceTile col-6 col-sm-4 col-md-3 col-lg-2">
       <p>{name}</p>
       <form>
-        <ArmorIcon piece={props.piece} equipped={props.equipped} skills={props.skills} />
+        <ArmorIcon piece={props.piece} equipped={props.equipped} skills={props.skills} equipArmor={props.equipArmor} />
         <button type="button" className="btn tri-border btn-sm" value={props.piece.type} onClick={props.equipArmor}>Equip</button>
       </form>
     </div>

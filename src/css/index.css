@@ -241,11 +241,26 @@ header .container::before {
   margin-left: auto;
 }
 
-form {
-  height: 100%;
+.loadouts nav .searchToggle {
+  margin-right: 1rem;
+  margin-top: 4px;
+  font-size: .8rem;
+  border: none;
+  background: none;
+  color: #704010;
+  vertical-align: middle;
+  line-height: .8;
 }
 
-form input {
+.loadouts nav .searchToggle.active {
+  color: #df8021;
+}
+
+.loadouts nav .searchToggle:focus {
+  outline: none;
+}
+
+.searchBar input {
   display: inline-block;
   vertical-align: middle;
   background: none;
@@ -255,27 +270,27 @@ form input {
   color: #ccc;
 }
 
-form input:focus {
+.searchBar input:focus {
   outline: none;
 }
 
-form ::-webkit-input-placeholder {
+.searchBar ::-webkit-input-placeholder {
   color: #73c0d2;
 }
 
-form :-ms-input-placeholder {
+.searchBar :-ms-input-placeholder {
   color: #73c0d2;
 }
 
-form ::-ms-input-placeholder {
+.searchBar ::-ms-input-placeholder {
   color: #73c0d2;
 }
 
-form ::placeholder {
+.searchBar ::placeholder {
   color: #73c0d2;
 }
 
-form::after {
+.searchBar::after {
   content: '';
   width: 1px;
   height: 100%;
@@ -314,6 +329,10 @@ form::after {
   margin: 0;
 }
 
+.equippedDetails .col-sm-4 {
+  padding: 0 1.25rem;
+}
+
 .equippedDetails .equippedHeader {
   margin: 0 -15px;
   width: calc(100% + 30px);
@@ -342,6 +361,81 @@ form::after {
   color: #ddd;
   margin: 0 1rem;
   font-size: 1.33rem;
+}
+
+.equippedDetails .statusPane .healthIcon,
+.equippedDetails .statusPane .staminaIcon {
+  display: inline-block;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-top: 2px;
+  -webkit-transform: rotate(45deg);
+          transform: rotate(45deg);
+}
+
+.equippedDetails .statusPane .healthIcon::before,
+.equippedDetails .statusPane .staminaIcon::before {
+  content: '';
+  display: block;
+  margin-top: .2rem;
+  margin-left: .2rem;
+  width: .85rem;
+  height: .85rem;
+  border-radius: 2px;
+}
+
+.equippedDetails .statusPane .healthIcon::before {
+  background-color: #79b05d;
+  border: 2px solid #93bb7f;
+  -webkit-box-shadow: 0 0 2px 2px #001400;
+          box-shadow: 0 0 2px 2px #001400;
+}
+
+.equippedDetails .statusPane .staminaIcon::before {
+  background-color: #cbba74;
+  border: 2px solid #b39b6f;
+  -webkit-box-shadow: 0 0 2px 2px #130b00;
+          box-shadow: 0 0 2px 2px #130b00;
+}
+
+.equippedDetails .statusPane:nth-child(2) {
+  border-top: #262626 dashed 3px;
+}
+
+.equippedDetails .statusPane:nth-child(4) {
+  margin-top: 2.5rem;
+  border-top: #262626 dashed 3px;
+  padding-top: 2px;
+}
+
+.equippedDetails .statusPane .status {
+  position: relative;
+}
+
+.equippedDetails .statusPane .status .statusBreakdown {
+  display: none;
+  width: 150px;
+  position: absolute;
+  top: -60px;
+}
+
+.equippedDetails .statusPane .status .statusBreakdown div {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  color: #aaa;
+}
+
+.equippedDetails .statusPane .status .statusBreakdown div span {
+  color: #ddd;
+  -webkit-box-flex: 2;
+      -ms-flex-positive: 2;
+          flex-grow: 2;
+  text-align: right;
+}
+
+.equippedDetails .statusPane .status img:hover ~ .statusBreakdown {
+  display: block;
 }
 
 .equippedInfo {
@@ -441,7 +535,17 @@ form::after {
   font-size: 1rem;
   line-height: 1.25;
   padding-left: 1rem;
-  width: 7rem;
+  width: 6rem;
+}
+
+.equippedSkills .skillTile .skillContent .skillInfo .skillBar p .skillOver,
+.armorPieceSkills .skillTile .skillContent .skillInfo .skillBar p .skillOver {
+  color: red;
+}
+
+.equippedSkills .skillTile .skillContent .skillInfo .skillBar p .skillCap,
+.armorPieceSkills .skillTile .skillContent .skillInfo .skillBar p .skillCap {
+  color: #df8021;
 }
 
 .equippedSkills .skillTile .skillContent .skillInfo .skillBar .skillBarIcons,
@@ -484,6 +588,24 @@ form::after {
   color: #222;
 }
 
+.equippedSkills .skillTile .skillContent .skillIcon .skillTileInfo,
+.armorPieceSkills .skillTile .skillContent .skillIcon .skillTileInfo {
+  display: none;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.equippedSkills .skillTile .skillContent .skillIcon:hover,
+.armorPieceSkills .skillTile .skillContent .skillIcon:hover {
+  cursor: default;
+}
+
+.equippedSkills .skillTile .skillContent .skillIcon:hover .skillTileInfo,
+.armorPieceSkills .skillTile .skillContent .skillIcon:hover .skillTileInfo {
+  display: block;
+}
+
 .currentEquipped {
   font-family: 'Russo one','Lato', sans-serif;
   color: green;
@@ -517,7 +639,7 @@ form::after {
 }
 
 .armorPieces .row p {
-  margin: 0 0 .25rem 0;
+  margin: 0 0 4px 0;
   color: #ccc;
 }
 
@@ -565,6 +687,11 @@ form::after {
 
 .armorIcon .pieceTileInfo {
   display: none;
+  z-index: 100;
+  bottom: 3.25rem;
+  right: -300px;
+  width: 350px;
+  position: absolute;
 }
 
 .armorIcon:hover {
@@ -572,15 +699,10 @@ form::after {
 }
 
 .armorIcon:hover .pieceTileInfo {
-  z-index: 100;
   display: block;
-  position: absolute;
-  bottom: 3.25rem;
-  right: -300px;
-  width: 350px;
 }
 
-.defenseStatus h5 {
+.statusPane h5 {
   text-align: center;
   color: #3ca4bc;
   font-family: 'lora';
@@ -590,19 +712,19 @@ form::after {
   margin-bottom: 2px;
 }
 
-.defenseStatus div {
+.statusPane div {
   border-bottom: #262626 dashed 3px;
 }
 
-.defenseStatus .status {
-  font-size: 1rem;
+.statusPane .status {
+  font-size: 1.05rem;
   padding: 2px 0;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
 }
 
-.defenseStatus .status span {
+.statusPane .status span:nth-child(2) {
   -webkit-box-flex: 2;
       -ms-flex-positive: 2;
           flex-grow: 2;
@@ -610,7 +732,7 @@ form::after {
   color: #aaa;
 }
 
-.defenseStatus img {
+.statusPane img {
   width: 1.25rem;
 }
 

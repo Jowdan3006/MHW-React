@@ -28,7 +28,7 @@ const ArmorIcon = (props) => {
       break;
   }
 
-  let equipped = '';
+  let equipped = false;
   if (props.equipped !== undefined && props.equipped !== null) {
     if (props.equipped.id === props.piece.id) {
       equipped = <span className="currentEquipped t-border">E</span>;
@@ -64,7 +64,7 @@ const ArmorIcon = (props) => {
   }
 
   return (
-    <div className={`armorIcon tri-border rarity-${props.piece.rarity}`}>
+    <div className={`armorIcon tri-border rarity-${props.piece.rarity}`} onClick={props.equipArmor}>
       {armorIcon}
       {equipped}
       {pieceTileInfo}

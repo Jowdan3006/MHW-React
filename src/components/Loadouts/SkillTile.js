@@ -24,7 +24,9 @@ const SkillTile = (props) => {
           <p className="t-border">{props.skill.skill.name}</p>
           <div className="skillBar">
             <div className="skillBarIcons">{skillLevelImg}</div>
-            <p className="t-border">Level&nbsp;{props.skill.level}</p>
+            <p className="t-border">Level {props.skill.level > props.skill.skill.ranks.length ? <span className="skillOver">{props.skill.level}</span> : 
+              props.skill.level === props.skill.skill.ranks.length ? <span className="skillCap">{props.skill.level}</span> : props.skill.level}
+            </p>
           </div>
         </div>
       </div>

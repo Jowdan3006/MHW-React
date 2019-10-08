@@ -43,7 +43,7 @@ const EquippedArmor = (props) => {
   );
 
   return (
-    <Col sm={4} className="equippedArmor b-shadow-50">
+    <Col sm={4} className="equippedArmor">
       <div className="equippedHeader t-border">
         Equipped Armor
       </div>

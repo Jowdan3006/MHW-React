@@ -45,6 +45,7 @@ class Main extends Component {
     skillsIsFetched: false,
 
     armorSearchValue: '',
+    searchBySkill: false,
     armorRank: "high",
 
     resistanceTypes: ['fire', 'water', 'thunder', 'ice', 'dragon'],
@@ -52,6 +53,7 @@ class Main extends Component {
       health: 100,
       stamina: 100,
       defense: 0,
+      baseDefense: 0,
       resistances: {
         fire: 0,
         water: 0,
@@ -75,33 +77,60 @@ class Main extends Component {
     this.setState({[pieces + 'IsFetching']: true});
     console.log(pieces + "IsFetching");
     axios.get(`https://mhw-db.com/armor/?q={"type": "${piece}"}`)
-      .then(response => this.setState({ [pieces]: response.data, [pieces + 'IsFetched']: true}))
+      .then(response => { 
+        let pieces = [];
+        response.data.forEach(piece => {
+          let skillNames = [];
+          piece.skills.forEach(skill => {
+            skillNames = skillNames.concat(skill.skillName.toLowerCase().split(" "));
+          })
+          piece.skillNames = skillNames;
+          pieces.push(piece);
+        })
+        return pieces;
+      })
+      .then(data => this.setState({ [pieces]: data, [pieces + 'IsFetched']: true}))
       .then(() => console.log(pieces + "Fetched", this.state[pieces]))
       .catch(error => console.log("Error while fetching data", error));
   }
 
   getPiecesTiles = (piece) => {
     let pieces = this.state[piece + "Pieces"];
-    let pieceTiles = pieces.filter(
-      currentPiece => 
-        currentPiece.name.toLowerCase().includes(this.state.armorSearchValue.toLowerCase())
-        && currentPiece.rank === this.state.armorRank 
-        // && index < 70
-      )
-      .map((piece) => 
-        <PieceTile 
-          key={piece.id}
-          piece={piece}
-          equipArmor={this.equipArmor.bind(this, piece)}
-          equipped={this.state[piece.type + "Piece"] === null ? null : this.state[piece.type + "Piece"]}
-          skills = {this.state.skills}
-        />
-      )
+    let search = this.state.armorSearchValue.toLowerCase().split(" ");
+    let pieceTiles = pieces.filter(currentPiece => {
+      if (this.state.searchBySkill) {
+        let result = currentPiece.skillNames.length > 0;
+        search.forEach(s => {
+          let skillMatch = false;
+          currentPiece.skillNames.forEach(skillName => {
+            skillMatch = skillMatch || skillName.includes(s) || s === null || s === "";
+          })
+          result = result && skillMatch;
+        })
+        return result && currentPiece.rank === this.state.armorRank
+      } else {
+        return currentPiece.name.toLowerCase().includes(this.state.armorSearchValue.toLowerCase())
+          && currentPiece.rank === this.state.armorRank 
+      }
+    })
+    .map(piece => 
+      <PieceTile 
+        key={piece.id}
+        piece={piece}
+        equipArmor={this.equipArmor.bind(this, piece)}
+        equipped={this.state[piece.type + "Piece"] === null ? null : this.state[piece.type + "Piece"]}
+        skills = {this.state.skills}
+      />
+    )
     return pieceTiles;
   }
 
   searchArmorPieces = (event) => {
     this.setState({armorSearchValue: event.target.value});
+  }
+
+  toggleArmorSearch = () => {
+    this.setState({searchBySkill: !this.state.searchBySkill});
   }
 
   setArmorRank = (rank) => {
@@ -138,30 +167,29 @@ class Main extends Component {
   equipArmor(piece) {
     let updatedSkills = null;
     let updatedEquippedInfo = {};
-    if (this.state.skills.length !== 0) {
-      if (this.state[piece.type + "Piece"] !== null) {
+
+    if (this.state.skills.length !== 0) { // Check if the skills have been fetched
+      if (this.state[piece.type + "Piece"] !== null) { // Check if the state piece type is set and needs to be replaced
         console.log(`${piece.type}Piece Found`, this.state[piece.type + "Piece"]);
         console.log(`Replacing ${piece.type}Piece`, piece);
-        updatedSkills = this.updateSkill(this.state[piece.type + "Piece"], true, this.state.skills);
-        if (piece.skills.length !== 0) {
-          updatedSkills = this.updateSkill(piece, false, updatedSkills);
-        }
-        updatedEquippedInfo = this.updateEquippedInfo(piece, this.state[piece.type + "Piece"], this.state.equippedInfo)
+        updatedSkills = this.updateSkill(this.state[piece.type + "Piece"], this.state.skills, true); // Remove old skills from state piece and create a new skills array 
+        updatedSkills = this.updateSkill(piece, updatedSkills, false); // Add new skills from current piece using the newly created skills array
+
+        updatedEquippedInfo = this.updateEquippedInfo(this.state[piece.type + "Piece"], this.state.equippedInfo, true) // Remove state piece equipment info and create a new equipment info array
+        updatedEquippedInfo = this.updateEquippedInfo(piece, updatedEquippedInfo, false) // Add current piece equipment info using created equipment info array
       } else {
-        if (piece.skills.length !== 0) {
-          updatedSkills = this.updateSkill(piece, false, this.state.skills);
-        }
-        updatedEquippedInfo = this.updateEquippedInfo(piece, null, this.state.equippedInfo)
+        updatedSkills = this.updateSkill(piece, this.state.skills, false); // Add new skills from current piece and create a new skills array 
+        updatedEquippedInfo = this.updateEquippedInfo(piece, this.state.equippedInfo, false) // Add current piece equipment info and create a new equipment info array
       }
-      if (updatedSkills === null) {
-        this.setState({ [piece.type + "Piece"]: piece, equippedInfo: updatedEquippedInfo});
-      } else {
-        this.setState({ [piece.type + "Piece"]: piece, skills: updatedSkills, equippedInfo: updatedEquippedInfo});
-      }
+
+      updatedEquippedInfo = this.updateEquippedInfoBySkills(updatedEquippedInfo, this.state.skills, true)
+      updatedEquippedInfo = this.updateEquippedInfoBySkills(updatedEquippedInfo, updatedSkills, false)
+
+      this.setState({ [piece.type + "Piece"]: piece, skills: updatedSkills, equippedInfo: updatedEquippedInfo});
     }
   }
 
-  updateSkill = (piece, minus, currentSkills) => {
+  updateSkill = (piece, currentSkills, minus) => {
     let updatedSkills = [];
     currentSkills.forEach((stateSkill) => {
       let currentSkill = null;
@@ -174,44 +202,93 @@ class Main extends Component {
         }
       });
       if (currentSkill === null) {
-          updatedSkills = update(updatedSkills, {$push: [stateSkill]});
+        updatedSkills = update(updatedSkills, {$push: [stateSkill]});
       }
     });
     return updatedSkills;
   }
 
-  updateEquippedInfo = (piece, oldPiece, currentEquippedInfo) => {
+  updateEquippedInfo = (piece, currentEquippedInfo, minus) => {
     let updatedEquippedInfo = {};
-    if (oldPiece != null) {
-      updatedEquippedInfo = update(currentEquippedInfo, {$merge: {defense : currentEquippedInfo.defense - oldPiece.defense.base + piece.defense.base}});
-      this.state.resistanceTypes.forEach(resistance => {
-        updatedEquippedInfo = update(updatedEquippedInfo, 
-          {resistances: {[resistance]: {$set: updatedEquippedInfo.resistances[resistance] - oldPiece.resistances[resistance] + piece.resistances[resistance]}}}
-        );
-      });
-    } else {
-      updatedEquippedInfo = update(currentEquippedInfo, {$merge: {defense : currentEquippedInfo.defense + piece.defense.base}});
-      this.state.resistanceTypes.forEach(resistance => {
-        updatedEquippedInfo = update(updatedEquippedInfo, 
-          {resistances: {[resistance]: {$set: updatedEquippedInfo.resistances[resistance] + piece.resistances[resistance]}}}
-        );
-      });
-    }
-    // this.state.resistanceTypes.forEach(resistance => {
-    //   currentEquippedInfo.resistances[resistance] += piece.resistances[resistance];
-    // });
+    updatedEquippedInfo = update(currentEquippedInfo, {$merge: {defense: minus ? currentEquippedInfo.defense - piece.defense.base : currentEquippedInfo.defense + piece.defense.base}});
+    updatedEquippedInfo = update(updatedEquippedInfo, {$merge: {baseDefense: minus ? currentEquippedInfo.baseDefense - piece.defense.base : currentEquippedInfo.baseDefense + piece.defense.base}});
+    this.state.resistanceTypes.forEach(resistance => {
+      updatedEquippedInfo = update(updatedEquippedInfo, 
+        {resistances: {[resistance]: {$set: minus ? updatedEquippedInfo.resistances[resistance] - piece.resistances[resistance] : updatedEquippedInfo.resistances[resistance] + piece.resistances[resistance]}}}
+      );
+    }); 
     return updatedEquippedInfo;
   }
 
-  updateEquippedInfoBySkills = (skills, oldSkills, currentEquippedInfo) => {
-    console.log("Old Skills", oldSkills);
-    console.log("New Skills", skills);
-    oldSkills.forEach(oldSkill => {
-      console.log(oldSkill);
-      if (oldSkill.level > 0 && Object.keys(oldSkill.skill.ranks[oldSkill.level - 1].modifiers).length !== 0) {
-        console.log(oldSkill);
+  updateEquippedInfoBySkills = (updatedEquippedInfo, updatedSkills, minus) => {
+    updatedSkills.forEach(skill => {
+      if (skill.level !== 0) {
+        let level = skill.level > skill.skill.ranks.length ? skill.skill.ranks.length : skill.level;
+        if (skill.skill.ranks[level - 1].modifiers !== null) {
+          let modifiers = Object.entries(skill.skill.ranks[level - 1].modifiers);
+          modifiers.forEach(modifier => {
+            switch (modifier[0]) {
+              case "defense":
+                if (skill.skill.name === "Defense Boost" && level > 2) {
+                  let percent;
+                  switch (level) {
+                    case 3:
+                    case 4:
+                      percent = 5;
+                      break;
+                    case 5:
+                    case 6:
+                      percent = 8;
+                      break;
+                    case 7:
+                      percent = 10;
+                      break;
+                    default:
+                      percent = 0;
+                      break;
+                  }
+                  updatedEquippedInfo = update(updatedEquippedInfo, {$merge: 
+                    {defense: minus ? 
+                      updatedEquippedInfo.baseDefense : 
+                      Math.floor(updatedEquippedInfo.baseDefense * (1 + (percent / 100))) + modifier[1]}
+                  })
+                } else {
+                  updatedEquippedInfo = update(updatedEquippedInfo, {$merge: {defense: minus ? updatedEquippedInfo.defense - modifier[1] : updatedEquippedInfo.defense + modifier[1]}})
+                }
+                break; 
+              case "health":
+                updatedEquippedInfo = update(updatedEquippedInfo, {$merge: {health: minus ? updatedEquippedInfo.health - modifier[1] : updatedEquippedInfo.health + modifier[1]}})
+                break;
+              case "resistAll":
+                this.state.resistanceTypes.forEach(resistance => {
+                  updatedEquippedInfo = update(updatedEquippedInfo, 
+                    {resistances: {[resistance]: {$set: minus ? updatedEquippedInfo.resistances[resistance] - modifier[1] : updatedEquippedInfo.resistances[resistance] + modifier[1]}}}
+                  );
+                }); 
+                break;
+              case "resistFire":
+                updatedEquippedInfo = update(updatedEquippedInfo, {resistances: {fire: {$set: minus ? updatedEquippedInfo.resistances.fire - modifier[1] : updatedEquippedInfo.resistances.fire + modifier[1]}}})
+                break;
+              case "resistWater":
+                updatedEquippedInfo = update(updatedEquippedInfo, {resistances: {water: {$set: minus ? updatedEquippedInfo.resistances.water - modifier[1] : updatedEquippedInfo.resistances.water + modifier[1]}}})
+                break;
+              case "resistIce":
+                updatedEquippedInfo = update(updatedEquippedInfo, {resistances: {ice: {$set: minus ? updatedEquippedInfo.resistances.ice - modifier[1] : updatedEquippedInfo.resistances.ice + modifier[1]}}})
+                break;
+              case "resistThunder":
+                updatedEquippedInfo = update(updatedEquippedInfo, {resistances: {thunder: {$set: minus ? updatedEquippedInfo.resistances.thunder - modifier[1] : updatedEquippedInfo.resistances.thunder + modifier[1]}}})
+                break;
+              case "resistDragon":
+                updatedEquippedInfo = update(updatedEquippedInfo, {resistances: {dragon: {$set: minus ? updatedEquippedInfo.resistances.dragon - modifier[1] : updatedEquippedInfo.resistances.dragon + modifier[1]}}})
+                break;
+              default:
+                break;
+            }
+          })
+        }
       }
-    })
+    });
+    return updatedEquippedInfo;
   }
 
   getMonsters = () => {
@@ -226,7 +303,6 @@ class Main extends Component {
       this.state.monsters.filter(monster => String(monster.id) === id)[0]
     );
   }
-
   
   searchMonsters = (event) => {
     this.setState({ monsterSearchValue: event.target.value});
@@ -254,6 +330,8 @@ class Main extends Component {
               getPiecesTiles={this.getPiecesTiles}
               searchArmorPieces={this.searchArmorPieces.bind(this)}
               armorSearchValue={this.state.armorSearchValue}
+              toggleArmorSearch={this.toggleArmorSearch.bind(this)}
+              searchBySkill={this.state.searchBySkill}
               setArmorRank={this.setArmorRank.bind(this)}
               getSkills={this.getSkills}
               getEquippedSkills={this.getEquippedSkills}

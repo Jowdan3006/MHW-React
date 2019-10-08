@@ -13,6 +13,7 @@ const SkillTileInfo = (props) => {
 
   return (
     <div className="skillTileInfo">
+      {props.skill.skill.name}
     </div>
   );
 }
