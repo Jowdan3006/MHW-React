@@ -23,11 +23,11 @@ const EquippedInfo = (props) => {
       defense={props.equippedInfo.defense}
       baseDefense={props.equippedInfo.baseDefense}
       resistances={[
-        {name: 'Fire', value: props.equippedInfo.resistances.fire},
-        {name: 'Water', value: props.equippedInfo.resistances.water},
-        {name: 'Thunder', value: props.equippedInfo.resistances.thunder},
-        {name: 'Ice', value: props.equippedInfo.resistances.ice},
-        {name: 'Dragon', value: props.equippedInfo.resistances.dragon}
+        {name: 'Fire', value: props.equippedInfo.resistances.fire, base: props.equippedInfo.resistances.fireBase},
+        {name: 'Water', value: props.equippedInfo.resistances.water, base: props.equippedInfo.resistances.waterBase},
+        {name: 'Thunder', value: props.equippedInfo.resistances.thunder, base: props.equippedInfo.resistances.thunderBase},
+        {name: 'Ice', value: props.equippedInfo.resistances.ice, base: props.equippedInfo.resistances.iceBase},
+        {name: 'Dragon', value: props.equippedInfo.resistances.dragon, base: props.equippedInfo.resistances.dragonBase}
       ]}
       />
     </Col>

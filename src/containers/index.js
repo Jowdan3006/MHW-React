@@ -56,10 +56,15 @@ class Main extends Component {
       baseDefense: 0,
       resistances: {
         fire: 0,
+        fireBase: 0,
         water: 0,
+        waterBase: 0,
         thunder: 0,
+        thunderBase: 0,
         ice: 0,
-        dragon: 0
+        iceBase: 0,
+        dragon: 0,
+        dragonBase: 0
       }
     },
 
@@ -216,6 +221,9 @@ class Main extends Component {
       updatedEquippedInfo = update(updatedEquippedInfo, 
         {resistances: {[resistance]: {$set: minus ? updatedEquippedInfo.resistances[resistance] - piece.resistances[resistance] : updatedEquippedInfo.resistances[resistance] + piece.resistances[resistance]}}}
       );
+      updatedEquippedInfo = update(updatedEquippedInfo, 
+        {resistances: {[resistance + "Base"]: {$set: minus ? updatedEquippedInfo.resistances[resistance + "Base"] - piece.resistances[resistance] : updatedEquippedInfo.resistances[resistance + "Base"] + piece.resistances[resistance]}}}
+      );
     }); 
     return updatedEquippedInfo;
   }
@@ -229,32 +237,8 @@ class Main extends Component {
           modifiers.forEach(modifier => {
             switch (modifier[0]) {
               case "defense":
-                if (skill.skill.name === "Defense Boost" && level > 2) {
-                  let percent;
-                  switch (level) {
-                    case 3:
-                    case 4:
-                      percent = 5;
-                      break;
-                    case 5:
-                    case 6:
-                      percent = 8;
-                      break;
-                    case 7:
-                      percent = 10;
-                      break;
-                    default:
-                      percent = 0;
-                      break;
-                  }
-                  updatedEquippedInfo = update(updatedEquippedInfo, {$merge: 
-                    {defense: minus ? 
-                      updatedEquippedInfo.baseDefense : 
-                      Math.floor(updatedEquippedInfo.baseDefense * (1 + (percent / 100))) + modifier[1]}
-                  })
-                } else {
-                  updatedEquippedInfo = update(updatedEquippedInfo, {$merge: {defense: minus ? updatedEquippedInfo.defense - modifier[1] : updatedEquippedInfo.defense + modifier[1]}})
-                }
+                
+                
                 break; 
               case "health":
                 updatedEquippedInfo = update(updatedEquippedInfo, {$merge: {health: minus ? updatedEquippedInfo.health - modifier[1] : updatedEquippedInfo.health + modifier[1]}})
@@ -291,6 +275,34 @@ class Main extends Component {
     return updatedEquippedInfo;
   }
 
+  calculateDefense() {
+    if (skill.skill.name === "Defense Boost" && level > 2) {
+      let percent;
+      switch (level) {
+        case 3:
+        case 4:
+          percent = 5;
+          break;
+        case 5:
+        case 6:
+          percent = 8;
+          break;
+        case 7:
+          percent = 10;
+          break;
+        default:
+          percent = 0;
+          break;
+      }
+      updatedEquippedInfo = update(updatedEquippedInfo, {$merge: 
+        {defense: minus ? 
+          updatedEquippedInfo.baseDefense : 
+          Math.floor(updatedEquippedInfo.baseDefense * (1 + (percent / 100))) + modifier[1]}
+      })
+    } else {
+      updatedEquippedInfo = update(updatedEquippedInfo, {$merge: {defense: minus ? updatedEquippedInfo.defense - modifier[1] : updatedEquippedInfo.defense + modifier[1]}})
+    }
+  }
   getMonsters = () => {
     fetch('https://mhw-db.com/monsters')
       .then(response => response.json())

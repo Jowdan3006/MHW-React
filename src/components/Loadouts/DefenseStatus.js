@@ -8,8 +8,8 @@ const DefenseStatus = (props) => {
       <div key={index} className="status t-border"><img src={`/img/general/${resistance.name}.svg`} alt={resistance.name} /><span className="t-border">Vs. {resistance.name}</span>{resistance.value}
         {props.baseDefense === undefined ? "" :
           <div className="statusBreakdown b-shadow-75">
-            <div>Base Defense<span>{props.baseDefense}</span></div>
-            <div>Skill Defense<span>{props.defense - props.baseDefense}</span></div>
+            <div>Base Resistance<span>{resistance.base}</span></div>
+            <div>Skill Resistance<span>{resistance.value - resistance.base}</span></div>
           </div>
         }
       </div>
