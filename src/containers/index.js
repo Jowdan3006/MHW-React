@@ -81,7 +81,8 @@ class Main extends Component {
     let pieces = piece + 'Pieces';
     this.setState({[pieces + 'IsFetching']: true});
     console.log(pieces + "IsFetching");
-    fetch('https://mhw-db.com/armor/?q={"type": "' + piece + '"}')
+    let url = `https://mhw-db.com/armor/?q={"type": "${piece}"}`
+    fetch(url)
       .then(response => response.json())
       .then(responseData => { 
         let pieces = [];
