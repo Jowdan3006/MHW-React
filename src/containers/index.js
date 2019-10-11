@@ -81,10 +81,11 @@ class Main extends Component {
     let pieces = piece + 'Pieces';
     this.setState({[pieces + 'IsFetching']: true});
     console.log(pieces + "IsFetching");
-    axios.get(`https://mhw-db.com/armor/?q={"type": "${piece}"}`)
-      .then(response => { 
+    fetch(`https://mhw-db.com/armor/?q={"type": "${piece}"}`)
+      .then(response => response.json())
+      .then(responseData => { 
         let pieces = [];
-        response.data.forEach(piece => {
+        responseData.forEach(piece => {
           let skillNames = [];
           piece.skills.forEach(skill => {
             skillNames = skillNames.concat(skill.skillName.toLowerCase().split(" "));
@@ -147,9 +148,10 @@ class Main extends Component {
       console.log("SkillsIsFetching")
       this.setState({skillsIsFetching: true})
       let skills = [];
-      axios.get(`https://mhw-db.com/skills/`)
-        .then(response => {
-          response.data.forEach(skill => skills.push({id: skill.id, level: 0, skill: skill}))
+      fetch(`https://mhw-db.com/skills/`)
+        .then(response => response.json())
+        .then(responseData => {
+          responseData.forEach(skill => skills.push({id: skill.id, level: 0, skill: skill}))
         })
         .then(() => this.setState({skills: skills, skillsIsFetching: false, skillsIsFetched: true}))
         .then(() => console.log("SkillsFetched", this.state.skills))
