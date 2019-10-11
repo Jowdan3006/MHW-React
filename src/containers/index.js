@@ -238,6 +238,7 @@ class Main extends Component {
             switch (modifier[0]) {
               case "defense":
                 
+                updatedEquippedInfo = this.calculateDefense(updatedEquippedInfo, skill, level, minus, modifier)
                 
                 break; 
               case "health":
@@ -275,7 +276,7 @@ class Main extends Component {
     return updatedEquippedInfo;
   }
 
-  calculateDefense() {
+  calculateDefense(updatedEquippedInfo, skill, level, minus, modifier) {
     if (skill.skill.name === "Defense Boost" && level > 2) {
       let percent;
       switch (level) {
@@ -302,7 +303,9 @@ class Main extends Component {
     } else {
       updatedEquippedInfo = update(updatedEquippedInfo, {$merge: {defense: minus ? updatedEquippedInfo.defense - modifier[1] : updatedEquippedInfo.defense + modifier[1]}})
     }
+    return updatedEquippedInfo;
   }
+
   getMonsters = () => {
     fetch('https://mhw-db.com/monsters')
       .then(response => response.json())
