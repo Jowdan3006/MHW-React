@@ -1,0 +1,4 @@
+[[headers]]
+  for = "https://mhw-db.com/*"
+  [headers.values]
+    Access-Control-Allow-Origin =  "*"
