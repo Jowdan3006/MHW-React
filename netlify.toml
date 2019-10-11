@@ -20,7 +20,7 @@
 #     access-control-allow-methods = "*"
 #     access-control-allow-origin = "https://mhw-db.netlify.com"
 [[headers]]
-  for = "*"
+  for = "https://mhw-db.com/*"
   [headers.values]
     Origin = "https://mhw-db.netlify.com"
     Sec-Fetch-Mode = "cors"
