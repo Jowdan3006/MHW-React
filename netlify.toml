@@ -19,3 +19,7 @@
     access-control-allow-headers = "*"
     access-control-allow-methods = "*"
     access-control-allow-origin = "https://mhw-db.netlify.com"
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
