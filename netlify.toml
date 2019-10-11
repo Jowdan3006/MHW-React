@@ -1,4 +1,4 @@
 [[headers]]
   for = "https://mhw-db.com/*"
   [headers.values]
-    Access-Control-Allow-Origin =  "*"
+    Access-Control-Allow-Origin =  "https://mhw-db.netlify.com"
