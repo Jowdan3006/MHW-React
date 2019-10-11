@@ -81,7 +81,7 @@ class Main extends Component {
     let pieces = piece + 'Pieces';
     this.setState({[pieces + 'IsFetching']: true});
     console.log(pieces + "IsFetching");
-    axios.get(`http://mhw-db.com/armor/?q={"type": "${piece}"}`)
+    axios.get(`https://mhw-db.com/armor/?q={"type": "${piece}"}`)
       .then(response => { 
         let pieces = [];
         response.data.forEach(piece => {
@@ -147,7 +147,7 @@ class Main extends Component {
       console.log("SkillsIsFetching")
       this.setState({skillsIsFetching: true})
       let skills = [];
-      axios.get(`http://mhw-db.com/skills/`)
+      axios.get(`https://mhw-db.com/skills/`)
         .then(response => {
           response.data.forEach(skill => skills.push({id: skill.id, level: 0, skill: skill}))
         })
