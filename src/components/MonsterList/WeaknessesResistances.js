@@ -54,8 +54,8 @@ const WeaknessesResistances = (props) => {
     <div className="WeaknessesResistances">
       <div className="elements">
         Elemental weaknesses:&nbsp;
-        {monsterWeaknessElements.length !== 0 ? monsterWeaknessElements : "none"}
-        {monsterWeaknessElementConditions.length !== 0 ? <div className="conditional">Elemental weaknesses Conditional: {monsterWeaknessElementConditions}</div> : ""}
+        <ul>{monsterWeaknessElements.length !== 0 ? monsterWeaknessElements : "none"}</ul>
+        {monsterWeaknessElementConditions.length !== 0 ? <div className="conditional">Elemental weaknesses Conditional: <ul>{monsterWeaknessElementConditions}</ul></div> : ""}
       </div>
       <hr/>
       <div className="ailments">

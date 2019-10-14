@@ -4,8 +4,10 @@ import {
   NavLink
 } from "react-router-dom";
 
+import Carousel from 'react-bootstrap/Carousel'
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 
 import ArmorPieces from './ArmorPieces';
 import EquippedArmor from './EquippedArmor';
@@ -38,6 +40,7 @@ class Loadouts extends Component {
               armorTypeCapital={capitalType}
               getSkills={this.props.getSkills}
               skillsIsFetched={this.props.skillsIsFetched}
+              skillsIsFetching={this.props.skillsIsFetching}
             />} 
           />
         )
@@ -64,11 +67,24 @@ class Loadouts extends Component {
       <div className="loadouts">
         <Container>
           <Row className="equippedDetails b-shadow-50">
-            <EquippedArmor 
-              equippedArmor = {this.props.equippedArmor}
-              updatedArmorName = {this.updatedArmorName}
-              skills = {this.props.skills}
-            />
+            <Col sm={4}>
+              <Carousel interval={null} controls={false} keyboard={true} wrap={false} fade={true}>
+                <Carousel.Item>
+                  <EquippedArmor 
+                    equippedArmor = {this.props.equippedArmor}
+                    updatedArmorName = {this.updatedArmorName}
+                    skills = {this.props.skills}
+                  />
+                </Carousel.Item>
+                <Carousel.Item>
+                  <EquippedArmor 
+                    equippedArmor = {this.props.equippedArmor}
+                    updatedArmorName = {this.updatedArmorName}
+                    skills = {this.props.skills}
+                  />
+                </Carousel.Item>
+              </Carousel>
+            </Col>
             <EquippedInfo 
               equippedArmor = {this.props.equippedArmor}
               equippedInfo = {this.props.equippedInfo}

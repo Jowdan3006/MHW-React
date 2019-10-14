@@ -11,11 +11,11 @@ const Weaknesses = (props) => {
   }
   const stars = getstars();
   return(
-    <span className={props.weakness.element}>
+    <li className={props.weakness.element}>
       <img src={`/img/general/${props.weakness.element}.svg`} alt="blank" />
       {props.weakness.element + (props.weakness.condition === null ? "" : ` when ${props.weakness.condition}`)}
       {stars}
-    </span>
+    </li>
   );
 }
 

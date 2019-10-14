@@ -17,8 +17,7 @@ const SkillTile = (props) => {
     <div className="skillTile">
       <div className="skillContent">
         <span className={`skillIcon skill-${props.skill.skill.id}`}>
-          &#xe90a;<span>&#xe90b;</span><span>&#xe90c;</span><span>&#xe90d;</span>
-          <SkillTileInfo skill={props.skill} />
+          &#xe90a;<span className="skillIconInner">&#xe90b;</span><span className="skillIconInner">&#xe90c;</span><span className="skillIconInner">&#xe90d;</span>
         </span>
         <div className="skillInfo">
           <p className="t-border">{props.skill.skill.name}</p>
@@ -29,6 +28,7 @@ const SkillTile = (props) => {
             </p>
           </div>
         </div>
+        {props.skill.armorSkills !== undefined? <SkillTileInfo skill={props.skill} /> : null}
       </div>
     </div>
   );

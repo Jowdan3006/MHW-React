@@ -4,7 +4,6 @@ import {
   HashRouter
 } from "react-router-dom";
 
-import axios from 'axios';
 import update from 'immutability-helper';
 
 import Header from "../components/Header";
@@ -15,6 +14,8 @@ import PieceTile from "../components/Loadouts/PieceTile";
 class Main extends Component {
   
   state = {
+    types: ['head', 'chest', 'gloves', 'waist', 'legs'],
+
     headPieces: [],
     headPiecesIsFetching: false,
     headPiecesIsFetched: false,
@@ -83,22 +84,21 @@ class Main extends Component {
     console.log(pieces + "IsFetching");
     let url = `https://mhw-db.com/armor?q={"type": "${piece}"}`
     fetch(url)
-      .then(response => response.json())
-      .then(responseData => { 
-        let pieces = [];
-        responseData.forEach(piece => {
+      .then((response) => { this.setState({[pieces + 'IsFetched']: true}); return response; })
+      .then((response) => { console.log(pieces + "Fetched", this.state[pieces]); return response.json(); })
+      .then((response) => {
+        let armorPieces = [];
+        response.forEach(piece => {
           let skillNames = [];
           piece.skills.forEach(skill => {
             skillNames = skillNames.concat(skill.skillName.toLowerCase().split(" "));
           })
           piece.skillNames = skillNames;
-          pieces.push(piece);
+          armorPieces.push(piece);
         })
-        return pieces;
+        this.setState({ [pieces]: armorPieces, [pieces + 'IsFetching']: false})
       })
-      .then(data => this.setState({ [pieces]: data, [pieces + 'IsFetched']: true}))
-      .then(() => console.log(pieces + "Fetched", this.state[pieces]))
-      .catch(error => console.log("Error while fetching data", error));
+      .catch(error => console.log("Error while fetching data", error))
   }
 
   getPiecesTiles = (piece) => {
@@ -124,7 +124,7 @@ class Main extends Component {
       <PieceTile 
         key={piece.id}
         piece={piece}
-        equipArmor={this.equipArmor.bind(this, piece)}
+        equipArmor={this.equipArmor.bind(this)}
         equipped={this.state[piece.type + "Piece"] === null ? null : this.state[piece.type + "Piece"]}
         skills = {this.state.skills}
       />
@@ -144,20 +144,18 @@ class Main extends Component {
     this.setState({armorRank: rank})
   }
 
-  getSkills = () => {
-    if (this.state.skillsIsFetching === false && this.state.skillsIsFetched === false) {
-      console.log("SkillsIsFetching")
-      this.setState({skillsIsFetching: true})
-      let skills = [];
-      fetch('https://mhw-db.com/skills')
-        .then(response => response.json())
-        .then(responseData => {
-          responseData.forEach(skill => skills.push({id: skill.id, level: 0, skill: skill}))
-        })
-        .then(() => this.setState({skills: skills, skillsIsFetching: false, skillsIsFetched: true}))
-        .then(() => console.log("SkillsFetched", this.state.skills))
-        .catch(error => console.log("Error while fetching data", error));
-    }
+  getSkills = async () => {
+    console.log("SkillsIsFetching")
+    this.setState({skillsIsFetching: true})
+    let skills = [];
+    await fetch('https://mhw-db.com/skills')
+      .then(response => response.json())
+      .then(responseData => {
+        responseData.forEach(skill => skills.push({id: skill.id, level: 0, skill: skill}))
+      })
+      .then(() => this.setState({skills: skills, skillsIsFetching: false, skillsIsFetched: true}))
+      .then(() => console.log("SkillsFetched", this.state.skills))
+      .catch(error => console.log("Error while fetching data", error));
   }
 
   getEquippedSkills = () => {
@@ -206,6 +204,14 @@ class Main extends Component {
           let updatedLevel = minus ? (stateSkill.level - skill.level) : (stateSkill.level + skill.level);
           currentSkill = update(stateSkill, {level: {$set: updatedLevel}});
           console.log(minus, updatedLevel, currentSkill);
+          let TempArmorSkills = {armorSkills: {}};
+          TempArmorSkills = update(TempArmorSkills, {armorSkills: {$set: stateSkill.armorSkills ? stateSkill.armorSkills : {head: 0, chest: 0, gloves: 0, waist: 0, legs: 0}}});
+          this.state.types.forEach(type => {
+            if (type === piece.type) {
+              TempArmorSkills.armorSkills[type] = minus ? TempArmorSkills.armorSkills[type] - skill.level : TempArmorSkills.armorSkills[type] + skill.level;
+            }
+          })
+          currentSkill = update(currentSkill, {armorSkills: {$set: TempArmorSkills.armorSkills}})
           updatedSkills.push(currentSkill);
         }
       });
@@ -240,9 +246,32 @@ class Main extends Component {
           modifiers.forEach(modifier => {
             switch (modifier[0]) {
               case "defense":
-                
-                updatedEquippedInfo = this.calculateDefense(updatedEquippedInfo, skill, level, minus, modifier)
-                
+                if (skill.skill.name === "Defense Boost" && level > 2) {
+                  let percent;
+                  switch (level) {
+                    case 3:
+                    case 4:
+                      percent = 5;
+                      break;
+                    case 5:
+                    case 6:
+                      percent = 8;
+                      break;
+                    case 7:
+                      percent = 10;
+                      break;
+                    default:
+                      percent = 0;
+                      break;
+                  }
+                  updatedEquippedInfo = update(updatedEquippedInfo, {$merge: 
+                    {defense: minus ? 
+                      updatedEquippedInfo.baseDefense : 
+                      Math.floor(updatedEquippedInfo.baseDefense * (1 + (percent / 100))) + modifier[1]}
+                  })
+                } else {
+                  updatedEquippedInfo = update(updatedEquippedInfo, {$merge: {defense: minus ? updatedEquippedInfo.defense - modifier[1] : updatedEquippedInfo.defense + modifier[1]}})
+                }
                 break; 
               case "health":
                 updatedEquippedInfo = update(updatedEquippedInfo, {$merge: {health: minus ? updatedEquippedInfo.health - modifier[1] : updatedEquippedInfo.health + modifier[1]}})
@@ -280,33 +309,6 @@ class Main extends Component {
   }
 
   calculateDefense(updatedEquippedInfo, skill, level, minus, modifier) {
-    if (skill.skill.name === "Defense Boost" && level > 2) {
-      let percent;
-      switch (level) {
-        case 3:
-        case 4:
-          percent = 5;
-          break;
-        case 5:
-        case 6:
-          percent = 8;
-          break;
-        case 7:
-          percent = 10;
-          break;
-        default:
-          percent = 0;
-          break;
-      }
-      updatedEquippedInfo = update(updatedEquippedInfo, {$merge: 
-        {defense: minus ? 
-          updatedEquippedInfo.baseDefense : 
-          Math.floor(updatedEquippedInfo.baseDefense * (1 + (percent / 100))) + modifier[1]}
-      })
-    } else {
-      updatedEquippedInfo = update(updatedEquippedInfo, {$merge: {defense: minus ? updatedEquippedInfo.defense - modifier[1] : updatedEquippedInfo.defense + modifier[1]}})
-    }
-    return updatedEquippedInfo;
   }
 
   getMonsters = () => {
@@ -355,6 +357,7 @@ class Main extends Component {
               getEquippedSkills={this.getEquippedSkills}
               skills={this.state.skills}
               skillsIsFetched={this.state.skillsIsFetched}
+              skillsIsFetching={this.state.skillsIsFetching}
               armorRank={this.state.armorRank}
               equippedInfo={this.state.equippedInfo}
               pieces={{

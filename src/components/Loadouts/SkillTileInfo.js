@@ -1,19 +1,16 @@
 import React from 'react';
 
+import LevelBreakdown from './LevelBreakdown';
+import SkillLevelInfo from './SkillLevelInfo';
+
 const SkillTileInfo = (props) => {
-
-  let skillInfo = [];
-  for (let i = 1; i <= props.skill.skill.ranks.length; i++) {
-    if (i <= props.skill.level) {
-      skillInfo.push(<div key={i}>{props.skill}</div>);
-    } else {
-      skillInfo.push(<div key={i}>{props.skill}</div>);
-    }
-  }
-
   return (
-    <div className="skillTileInfo">
-      {props.skill.skill.name}
+    <div className="skillTileInfo b-shadow-100-darkerGrey">
+      <div className="skillIconBackground"></div>
+      <div className="skillName t-border">{props.skill.skill.name}</div>
+      <div className="skillDesc t-border">{props.skill.skill.description}</div>
+      <LevelBreakdown armorSkills={props.skill.armorSkills}/>
+      <SkillLevelInfo level={props.skill.level} ranks={props.skill.skill.ranks} />
     </div>
   );
 }

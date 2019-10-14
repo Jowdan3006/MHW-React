@@ -64,7 +64,7 @@ const ArmorIcon = (props) => {
   }
 
   return (
-    <div className={`armorIcon tri-border rarity-${props.piece.rarity}`} onClick={props.equipArmor}>
+    <div className={`armorIcon tri-border rarity-${props.piece.rarity}`} onClick={props.equipArmor ? props.equipArmor : null}>
       {armorIcon}
       {equipped}
       {pieceTileInfo}
