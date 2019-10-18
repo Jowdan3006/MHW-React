@@ -15,6 +15,7 @@ class Main extends Component {
   
   state = {
     types: ['head', 'chest', 'gloves', 'waist', 'legs'],
+    pieceTilePagination: 1,
 
     headPieces: [],
     headPiecesIsFetching: false,
@@ -47,7 +48,7 @@ class Main extends Component {
 
     armorSearchValue: '',
     searchBySkill: false,
-    armorRank: "high",
+    armorRank: "master",
 
     resistanceTypes: ['fire', 'water', 'thunder', 'ice', 'dragon'],
     equippedInfo: {
@@ -76,6 +77,10 @@ class Main extends Component {
 
   componentDidMount(){
     console.log("Main Mounted");
+  }
+
+  updatedPieceTilePagination(page) {
+    this.setState({pieceTilePagination: page});
   }
 
   getPiecesFor = (piece) => {
@@ -114,10 +119,10 @@ class Main extends Component {
           })
           result = result && skillMatch;
         })
-        return result && currentPiece.rank === this.state.armorRank
+        return result && (this.state.armorRank === "" ? true : currentPiece.rank === this.state.armorRank)
       } else {
         return currentPiece.name.toLowerCase().includes(this.state.armorSearchValue.toLowerCase())
-          && currentPiece.rank === this.state.armorRank 
+          && (this.state.armorRank === "" ? true : currentPiece.rank === this.state.armorRank)
       }
     })
     .map(piece => 
@@ -126,14 +131,15 @@ class Main extends Component {
         piece={piece}
         equipArmor={this.equipArmor.bind(this)}
         equipped={this.state[piece.type + "Piece"] === null ? null : this.state[piece.type + "Piece"]}
-        skills = {this.state.skills}
+        skills={this.state.skills}
+        updatedArmorName={this.updatedArmorName}
       />
     )
     return pieceTiles;
   }
 
   searchArmorPieces = (event) => {
-    this.setState({armorSearchValue: event.target.value});
+    this.setState({armorSearchValue: event.target.value, pieceTilePagination: 1});
   }
 
   toggleArmorSearch = () => {
@@ -141,7 +147,7 @@ class Main extends Component {
   }
 
   setArmorRank = (rank) => {
-    this.setState({armorRank: rank})
+    this.setState({armorRank: rank, pieceTilePagination: 1})
   }
 
   getSkills = async () => {
@@ -153,7 +159,7 @@ class Main extends Component {
       .then(responseData => {
         responseData.forEach(skill => skills.push({id: skill.id, level: 0, skill: skill}))
       })
-      .then(() => this.setState({skills: skills, skillsIsFetching: false, skillsIsFetched: true}))
+      .then(() => this.setState({skills: skills.reverse(), skillsIsFetching: false, skillsIsFetched: true}))
       .then(() => console.log("SkillsFetched", this.state.skills))
       .catch(error => console.log("Error while fetching data", error));
   }
@@ -267,7 +273,7 @@ class Main extends Component {
                   updatedEquippedInfo = update(updatedEquippedInfo, {$merge: 
                     {defense: minus ? 
                       updatedEquippedInfo.baseDefense : 
-                      Math.floor(updatedEquippedInfo.baseDefense * (1 + (percent / 100))) + modifier[1]}
+                      Math.floor(updatedEquippedInfo.defense * (1 + (percent / 100))) + modifier[1]}
                   })
                 } else {
                   updatedEquippedInfo = update(updatedEquippedInfo, {$merge: {defense: minus ? updatedEquippedInfo.defense - modifier[1] : updatedEquippedInfo.defense + modifier[1]}})
@@ -308,7 +314,21 @@ class Main extends Component {
     return updatedEquippedInfo;
   }
 
-  calculateDefense(updatedEquippedInfo, skill, level, minus, modifier) {
+  updatedArmorName(name) {
+    if (name.includes("Alpha +")) {
+      name = name.substring(0, name.length - 7) + "α +";
+    } else if (name.includes("Beta +")) {
+      name = name.substring(0, name.length - 6) + "β +";
+    } else if (name.includes("Gamma +")) {
+      name = name.substring(0, name.length - 7) + "γ +";
+    } else if (name.includes("Alpha")) {
+      name = name.substring(0, name.length - 5) + "α";
+    } else if (name.includes("Beta")) {
+      name = name.substring(0, name.length - 4) + "β";
+    } else if (name.includes("Gamma")) {
+      name = name.substring(0, name.length - 5) + "γ";
+    };
+    return name;
   }
 
   getMonsters = () => {
@@ -346,6 +366,9 @@ class Main extends Component {
           />
           <Route path="/Loadouts" render={(match) =>
             <Loadouts
+              updatedArmorName={this.updatedArmorName}
+              pieceTilePagination={this.state.pieceTilePagination}
+              updatedPieceTilePagination={this.updatedPieceTilePagination.bind(this)}
               getPiecesFor={this.getPiecesFor}
               getPiecesTiles={this.getPiecesTiles}
               searchArmorPieces={this.searchArmorPieces.bind(this)}

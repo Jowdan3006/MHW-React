@@ -28,7 +28,7 @@ const SkillTile = (props) => {
             </p>
           </div>
         </div>
-        {props.skill.armorSkills !== undefined? <SkillTileInfo skill={props.skill} /> : null}
+        <SkillTileInfo skill={props.skill} />
       </div>
     </div>
   );

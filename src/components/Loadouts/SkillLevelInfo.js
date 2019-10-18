@@ -7,16 +7,27 @@ const SkillLevelInfo = (props) => {
     let splitDescription = description.split("£");
     splitDescription.forEach((des, index) => {
       if (index !== 0) {
-        splitDescription[index] = <span>{des}<br/></span>;
+        splitDescription[index] = <span key={`des-${index}`}>{des}<br/></span>;
       } else if(des !== "") {
-        splitDescription[index] = <span>{des}</span>;
+        splitDescription[index] = <span key={`des-${index}`}>{des}</span>;
       }
     })
+    console.log(`index: ${index + 1} level: ${props.level} ${index + 1 >= props.level}`);
+    let foo = "";
+    let currentLevel = props.level > props.ranks.length ? props.ranks.length : props.level;
+
+    if (index + 1 <= currentLevel) {
+      if (index + 1 === currentLevel) {
+        foo = "current"
+      } else {
+        foo = "reached";
+      }
+    }
 
     skillLevels.push(
       <div key={`Sl-${index}`} className="skillLevel" >
           <div className="level t-border">{`Lv ${rank.level}`}</div>
-          <div className={`description t-border ${index + 1 < props.level ? "reached" : index + 1 === props.level ? "current" : ""}`}>{splitDescription}</div>
+          <div className={`description t-border ${foo}`}>{splitDescription}</div>
       </div>
     )
   })

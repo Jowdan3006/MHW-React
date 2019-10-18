@@ -35,7 +35,7 @@ const ArmorIcon = (props) => {
     }
   }
 
-  let pieceTileInfo = [];
+  let pieceTileInfo;
   if (props.piece.name !== undefined && props.piece.name !== null && props.skills.length !== 0) {
     let skillTiles = [];
     props.piece.skills.forEach((skill, index) => {
@@ -46,8 +46,8 @@ const ArmorIcon = (props) => {
       );
     });
     pieceTileInfo =
-      <div className="pieceTileInfo b-shadow-75">
-        <div className="armorPieceSkills">
+      <div className="pieceTileInfo">
+        <div className="armorPieceSkills b-shadow-75">
           {skillTiles}
           <DefenseStatus 
             defense={props.piece.defense.base}
@@ -63,8 +63,13 @@ const ArmorIcon = (props) => {
       </div>;
   }
 
+  let alt;
+  if (props.piece.rarity == 10 || props.piece.rarity == 11 || props.piece.rarity == 12) {
+    alt = props.piece.rarity + "-alt-" + Math.ceil((Math.random() * 3));
+  }
+
   return (
-    <div className={`armorIcon tri-border rarity-${props.piece.rarity}`} onClick={props.equipArmor ? props.equipArmor : null}>
+    <div className={`armorIcon tri-border rarity-${alt === undefined ? props.piece.rarity : alt}`} onClick={props.equipArmor ? props.equipArmor : null}>
       {armorIcon}
       {equipped}
       {pieceTileInfo}

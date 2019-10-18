@@ -1,5 +1,7 @@
 import React from 'react';
 
+import Pagination from 'react-bootstrap/Pagination';
+
 const ArmorPieces = (props) => {
   console.log(`${props.armorTypeCapital}Pieces Render`);
 
@@ -25,13 +27,32 @@ const ArmorPieces = (props) => {
     content = props.getPiecesTiles(props.armorType)
   }
 
+  let paginatedContent = []
+  let pagination = [];
+  if (Array.isArray(content)) {
+    let count = content.length;
+    const page = props.pieceTilePagination;
+    const maxTiles = 24;
+    const pages = Math.ceil(count / maxTiles)
+    for (let i = ((page - 1) * maxTiles) + 1; i > (page - 1) * maxTiles && i <= page * maxTiles && i <= count; i++) {
+      paginatedContent.push(content[i-1]);
+    }
+    for (let i = 1; i <= pages; i++) {
+      pagination.push(
+        <Pagination.Item key={`page-${i}`} active={i === page} onClick={() => props.updatedPieceTilePagination(i)} />
+      )
+    }
+  }
+
   return (
     <div className={`armorPieces b-shadow-50 ${props.armorType}Pieces`}>
       <h2 className="t-border">Change Equipment</h2>
       <div className="row">
         {/* Display only when fetched */}
-        {content}
+        {/* {content} */}
+        {Array.isArray(content) ? paginatedContent : content}
       </div>
+      {Array.isArray(content) ? <Pagination>{pagination}</Pagination> : null}
     </div>
   );
 }

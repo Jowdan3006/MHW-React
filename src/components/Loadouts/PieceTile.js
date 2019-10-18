@@ -6,14 +6,7 @@ const PieceTile = (props) => {
   console.log("PieceTile Render");
 
   // Changes Alpha, Beta, Gamma to their respective symbol
-  let name = props.piece.name;
-  if (props.piece.name.includes("Alpha")) {
-    name = props.piece.name.substring(0, props.piece.name.length - 5) + "α";
-  } else if (props.piece.name.includes("Beta")) {
-    name = props.piece.name.substring(0, props.piece.name.length - 4) + "β";
-  } else if (props.piece.name.includes("Gamma")) {
-    name = props.piece.name.substring(0, props.piece.name.length - 5) + "γ";
-  };
+  let name = props.updatedArmorName(props.piece.name);
 
   return (
     <div className="pieceTile col-6 col-sm-4 col-md-3 col-lg-2">

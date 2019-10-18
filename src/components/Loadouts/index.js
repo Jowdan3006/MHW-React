@@ -31,7 +31,9 @@ class Loadouts extends Component {
         let capitalType = type.charAt(0).toUpperCase() + type.slice(1);
         armorPieces.push (
           <Route key={index} path={`${this.props.match.path}/${capitalType}Pieces`} render={() => 
-            <ArmorPieces 
+            <ArmorPieces
+              pieceTilePagination={this.props.pieceTilePagination}
+              updatedPieceTilePagination={this.props.updatedPieceTilePagination}
               getPiecesFor={this.props.getPiecesFor}
               getPiecesTiles={this.props.getPiecesTiles}
               piecesIsFetching={this.props.piecesIsFetching[type]}
@@ -49,17 +51,6 @@ class Loadouts extends Component {
     return armorPieces;
   }
 
-  updatedArmorName(name) {
-    if (name.includes("Alpha")) {
-      name = name.substring(0, name.length - 5) + "α";
-    } else if (name.includes("Beta")) {
-      name = name.substring(0, name.length - 4) + "β";
-    } else if (name.includes("Gamma")) {
-      name = name.substring(0, name.length - 5) + "γ";
-    };
-    return name;
-  }
-
   render() {
     console.log("Loadout Render");
     console.log("Current Skills", this.state.skills);
@@ -68,22 +59,11 @@ class Loadouts extends Component {
         <Container>
           <Row className="equippedDetails b-shadow-50">
             <Col sm={4}>
-              <Carousel interval={null} controls={false} keyboard={true} wrap={false} fade={true}>
-                <Carousel.Item>
-                  <EquippedArmor 
-                    equippedArmor = {this.props.equippedArmor}
-                    updatedArmorName = {this.updatedArmorName}
-                    skills = {this.props.skills}
-                  />
-                </Carousel.Item>
-                <Carousel.Item>
-                  <EquippedArmor 
-                    equippedArmor = {this.props.equippedArmor}
-                    updatedArmorName = {this.updatedArmorName}
-                    skills = {this.props.skills}
-                  />
-                </Carousel.Item>
-              </Carousel>
+              <EquippedArmor 
+                equippedArmor = {this.props.equippedArmor}
+                updatedArmorName = {this.props.updatedArmorName}
+                skills = {this.props.skills}
+              />
             </Col>
             <EquippedInfo 
               equippedArmor = {this.props.equippedArmor}
@@ -99,25 +79,28 @@ class Loadouts extends Component {
           <Container>
             <ul className="nav">
               <li className="nav-item">
-                <NavLink className="nav-link" to="/Loadouts/HeadPieces">Head</NavLink>
+                <NavLink className="nav-link" to="/Loadouts/HeadPieces" onClick={() => this.props.updatedPieceTilePagination(1)}>Head</NavLink>
               </li>
               <li className="nav-item">
-                <NavLink className="nav-link" to="/Loadouts/ChestPieces">Chest</NavLink>
+                <NavLink className="nav-link" to="/Loadouts/ChestPieces" onClick={() => this.props.updatedPieceTilePagination(1)}>Chest</NavLink>
               </li>
               <li className="nav-item">
-                <NavLink className="nav-link" to="/Loadouts/GlovesPieces">Gloves</NavLink>
+                <NavLink className="nav-link" to="/Loadouts/GlovesPieces" onClick={() => this.props.updatedPieceTilePagination(1)}>Gloves</NavLink>
               </li>
               <li className="nav-item">
-                <NavLink className="nav-link" to="/Loadouts/WaistPieces">Waist</NavLink>
+                <NavLink className="nav-link" to="/Loadouts/WaistPieces" onClick={() => this.props.updatedPieceTilePagination(1)}>Waist</NavLink>
               </li>
               <li className="nav-item">
-                <NavLink className="nav-link" to="/Loadouts/LegsPieces">Legs</NavLink>
+                <NavLink className="nav-link" to="/Loadouts/LegsPieces" onClick={() => this.props.updatedPieceTilePagination(1)}>Legs</NavLink>
               </li>
               <li className="nav-item nav-rank">
-                <button onClick={() => this.props.armorRank === "low" ? null : this.props.setArmorRank("low")} className={`nav-link ${this.props.armorRank === "low" ? "active" : ""}`}>Low Rank</button>
+                <button onClick={() => this.props.armorRank === "low" ? this.props.setArmorRank("") : this.props.setArmorRank("low")} className={`nav-link ${this.props.armorRank === "low" ? "active" : ""}`}>Low Rank</button>
               </li>
               <li className="nav-item nav-rank">
-                <button onClick={() => this.props.armorRank === "high" ? null : this.props.setArmorRank("high")} className={`nav-link ${this.props.armorRank === "high" ? "active" : ""}`}>High Rank</button>
+                <button onClick={() => this.props.armorRank === "high" ? this.props.setArmorRank("") : this.props.setArmorRank("high")} className={`nav-link ${this.props.armorRank === "high" ? "active" : ""}`}>High Rank</button>
+              </li>
+              <li className="nav-item nav-rank">
+                <button onClick={() => this.props.armorRank === "master" ? this.props.setArmorRank("") : this.props.setArmorRank("master")} className={`nav-link ${this.props.armorRank === "master" ? "active" : ""}`}>Master Rank</button>
               </li>
               <li className="searchBar">
                 <button title="Search by skills separated by spaces" onClick={() => this.props.toggleArmorSearch()} className={`searchToggle t-border ${this.props.searchBySkill === true ? "active" : ""}`}>Search by skill</button>

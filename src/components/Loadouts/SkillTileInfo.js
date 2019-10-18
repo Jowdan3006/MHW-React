@@ -9,7 +9,7 @@ const SkillTileInfo = (props) => {
       <div className="skillIconBackground"></div>
       <div className="skillName t-border">{props.skill.skill.name}</div>
       <div className="skillDesc t-border">{props.skill.skill.description}</div>
-      <LevelBreakdown armorSkills={props.skill.armorSkills}/>
+      {props.skill.armorSkills !== undefined? <LevelBreakdown armorSkills={props.skill.armorSkills}/> : null}
       <SkillLevelInfo level={props.skill.level} ranks={props.skill.skill.ranks} />
     </div>
   );

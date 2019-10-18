@@ -180,7 +180,7 @@ header .container::before {
 }
 
 .loadouts nav .nav-item:nth-of-type(6) {
-  margin-left: 4rem;
+  margin-left: 3rem;
   position: relative;
 }
 
@@ -190,18 +190,20 @@ header .container::before {
   position: absolute;
   left: 0;
   bottom: .45rem;
-  width: 200%;
+  width: 300%;
   height: 1.1rem;
   background: -webkit-gradient(linear, left top, right top, from(rgba(0, 0, 0, 0)), color-stop(15%, #333), color-stop(85%, #333), to(rgba(0, 0, 0, 0)));
   background: linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, #333 15%, #333 85%, rgba(0, 0, 0, 0) 100%);
 }
 
 .loadouts nav .nav-rank {
-  width: 105px;
+  width: 95px;
 }
 
 .loadouts nav .nav-rank button {
   color: #73c0d2;
+  padding-left: 0;
+  padding-right: 0;
   background: none;
   border: none;
 }
@@ -391,6 +393,12 @@ header .container::before {
   font-size: 1.33rem;
 }
 
+.equippedDetails .equippedArmor .equippedPiece .armorIcon .pieceTileInfo {
+  z-index: 30;
+  top: -0.4rem;
+  left: 3rem;
+}
+
 .equippedDetails .statusPane .healthIcon,
 .equippedDetails .statusPane .staminaIcon {
   display: inline-block;
@@ -424,10 +432,6 @@ header .container::before {
   border: 2px solid #b39b6f;
   -webkit-box-shadow: 0 0 2px 2px #130b00;
           box-shadow: 0 0 2px 2px #130b00;
-}
-
-.equippedDetails .statusPane:nth-child(2) {
-  border-top: #262626 dashed 3px;
 }
 
 .equippedDetails .statusPane:nth-child(4) {
@@ -469,6 +473,10 @@ header .container::before {
 .equippedInfo {
   color: #ddd;
   z-index: 2;
+}
+
+.equippedInfo .statusPane:nth-child(2) {
+  border-top: #262626 dashed 3px;
 }
 
 .equippedSkills,
@@ -666,10 +674,39 @@ header .container::before {
 
 .equippedSkills .skillTile .skillContent .skillTileInfo .skillDesc,
 .armorPieceSkills .skillTile .skillContent .skillTileInfo .skillDesc {
+  font-size: 1rem;
   color: #d5d6b6;
   padding-bottom: 6px;
   min-height: 5rem;
   border-bottom: #494949 dashed 2px;
+}
+
+.pagination {
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.pagination .page-item .page-link {
+  margin: 0 .5rem;
+  padding: .4rem;
+  margin-top: .5rem;
+  -webkit-transform: rotate(45deg);
+          transform: rotate(45deg);
+  border-radius: 2px;
+  background-color: #68390f;
+  -webkit-box-shadow: 0px 0px 0px 2px #9f734c inset, 0px 0px 0px 2px #030303;
+          box-shadow: 0px 0px 0px 2px #9f734c inset, 0px 0px 0px 2px #030303;
+  border: none;
+}
+
+.pagination .page-item.active .page-link {
+  margin-top: .35rem;
+  border-radius: 3px;
+  padding: .6rem;
+  background-color: #f59652;
+  -webkit-box-shadow: 0px 0px 0px 2px #f59652 inset, 0px 0px 0px 4px #c27036 inset, 0px 0px 0px 2px #030303;
+          box-shadow: 0px 0px 0px 2px #f59652 inset, 0px 0px 0px 4px #c27036 inset, 0px 0px 0px 2px #030303;
 }
 
 .levelBreakdown h5,
@@ -829,6 +866,7 @@ header .container::before {
 
 .armorPieces .row p {
   margin: 0 0 4px 0;
+  white-space: nowrap;
   color: #ccc;
 }
 
@@ -881,8 +919,8 @@ header .container::before {
   -webkit-transition: opacity ease-in-out 0.15s;
   transition: opacity ease-in-out 0.15s;
   z-index: 100;
-  bottom: 3.2rem;
-  left: 0;
+  bottom: 0;
+  left: 3rem;
   width: 350px;
   position: absolute;
 }
@@ -975,6 +1013,208 @@ header .container::before {
 
 .armorIcon.rarity-8 span span {
   color: #c27151;
+}
+
+.armorIcon.rarity-9 span span {
+  color: #9b5d68;
+}
+
+.armorIcon.rarity-10-alt-1 {
+  position: relative;
+}
+
+.armorIcon.rarity-10-alt-1::after {
+  content: '';
+  z-index: 30;
+  position: absolute;
+  display: block;
+  top: 0;
+  left: 0;
+  width: 3rem;
+  height: 3rem;
+  background-image: url("/img/general/armorSparkle-rarity10-1.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.armorIcon.rarity-10-alt-1 span span {
+  color: #4d72b6;
+}
+
+.armorIcon.rarity-10-alt-2 {
+  position: relative;
+}
+
+.armorIcon.rarity-10-alt-2::after {
+  content: '';
+  z-index: 30;
+  position: absolute;
+  display: block;
+  top: 0;
+  left: 0;
+  width: 3rem;
+  height: 3rem;
+  background-image: url("/img/general/armorSparkle-rarity10-2.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.armorIcon.rarity-10-alt-2 span span {
+  color: #4d72b6;
+}
+
+.armorIcon.rarity-10-alt-3 {
+  position: relative;
+}
+
+.armorIcon.rarity-10-alt-3::after {
+  content: '';
+  z-index: 30;
+  position: absolute;
+  display: block;
+  top: 0;
+  left: 0;
+  width: 3rem;
+  height: 3rem;
+  background-image: url("/img/general/armorSparkle-rarity10-3.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.armorIcon.rarity-10-alt-3 span span {
+  color: #4d72b6;
+}
+
+.armorIcon.rarity-11-alt-1 {
+  position: relative;
+}
+
+.armorIcon.rarity-11-alt-1::after {
+  content: '';
+  z-index: 30;
+  position: absolute;
+  display: block;
+  top: 0;
+  left: 0;
+  width: 3rem;
+  height: 3rem;
+  background-image: url("/img/general/armorSparkle-rarity11-1.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.armorIcon.rarity-11-alt-1 span span {
+  color: #866941;
+}
+
+.armorIcon.rarity-11-alt-2 {
+  position: relative;
+}
+
+.armorIcon.rarity-11-alt-2::after {
+  content: '';
+  z-index: 30;
+  position: absolute;
+  display: block;
+  top: 0;
+  left: 0;
+  width: 3rem;
+  height: 3rem;
+  background-image: url("/img/general/armorSparkle-rarity11-2.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.armorIcon.rarity-11-alt-2 span span {
+  color: #866941;
+}
+
+.armorIcon.rarity-11-alt-3 {
+  position: relative;
+}
+
+.armorIcon.rarity-11-alt-3::after {
+  content: '';
+  z-index: 30;
+  position: absolute;
+  display: block;
+  top: 0;
+  left: 0;
+  width: 3rem;
+  height: 3rem;
+  background-image: url("/img/general/armorSparkle-rarity11-3.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.armorIcon.rarity-11-alt-3 span span {
+  color: #866941;
+}
+
+.armorIcon.rarity-12-alt-1 {
+  position: relative;
+}
+
+.armorIcon.rarity-12-alt-1::after {
+  content: '';
+  z-index: 30;
+  position: absolute;
+  display: block;
+  top: 0;
+  left: 0;
+  width: 3rem;
+  height: 3rem;
+  background-image: url("/img/general/armorSparkle-rarity12-1.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.armorIcon.rarity-12-alt-1 span span {
+  color: #92a0b1;
+}
+
+.armorIcon.rarity-12-alt-2 {
+  position: relative;
+}
+
+.armorIcon.rarity-12-alt-2::after {
+  content: '';
+  z-index: 30;
+  position: absolute;
+  display: block;
+  top: 0;
+  left: 0;
+  width: 3rem;
+  height: 3rem;
+  background-image: url("/img/general/armorSparkle-rarity12-2.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.armorIcon.rarity-12-alt-2 span span {
+  color: #92a0b1;
+}
+
+.armorIcon.rarity-12-alt-3 {
+  position: relative;
+}
+
+.armorIcon.rarity-12-alt-3::after {
+  content: '';
+  z-index: 30;
+  position: absolute;
+  display: block;
+  top: 0;
+  left: 0;
+  width: 3rem;
+  height: 3rem;
+  background-image: url("/img/general/armorSparkle-rarity12-3.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.armorIcon.rarity-12-alt-3 span span {
+  color: #92a0b1;
 }
 
 .skill-1 {
