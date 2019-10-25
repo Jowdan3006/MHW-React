@@ -16,6 +16,7 @@ class Main extends Component {
   state = {
     types: ['head', 'chest', 'gloves', 'waist', 'legs'],
     pieceTilePagination: 1,
+    equippedSkillTilesPagination: 1,
 
     headPieces: [],
     headPiecesIsFetching: false,
@@ -45,6 +46,10 @@ class Main extends Component {
     skills: [],
     skillsIsFetching: false,
     skillsIsFetched: false,
+
+    setSkills: [],
+    setSkillsIsFetched: false,
+    setSkillsIsFetching: false,
 
     armorSearchValue: '',
     searchBySkill: false,
@@ -83,14 +88,17 @@ class Main extends Component {
     this.setState({pieceTilePagination: page});
   }
 
+  updatedEquippedSkillTilesPagination(page) {
+    this.setState({equippedSkillTilesPagination: page});
+  }
+
   getPiecesFor = (piece) => {
     let pieces = piece + 'Pieces';
     this.setState({[pieces + 'IsFetching']: true});
     console.log(pieces + "IsFetching");
     let url = `https://mhw-db.com/armor?q={"type": "${piece}"}`
     fetch(url)
-      .then((response) => { this.setState({[pieces + 'IsFetched']: true}); return response; })
-      .then((response) => { console.log(pieces + "Fetched", this.state[pieces]); return response.json(); })
+      .then((response) => { this.setState({[pieces + 'IsFetched']: true}); return response.json(); })
       .then((response) => {
         let armorPieces = [];
         response.forEach(piece => {
@@ -103,6 +111,7 @@ class Main extends Component {
         })
         this.setState({ [pieces]: armorPieces, [pieces + 'IsFetching']: false})
       })
+      .then(() => { console.log(pieces + "Fetched", this.state[pieces]); })
       .catch(error => console.log("Error while fetching data", error))
   }
 
@@ -164,6 +173,20 @@ class Main extends Component {
       .catch(error => console.log("Error while fetching data", error));
   }
 
+  getSetSkills = async () => {
+    console.log("SetSkillsIsFetching")
+    this.setState({setSkillsIsFetching: true})
+    let setSkills = [];
+    await fetch('https://mhw-db.com/armor/sets?p={"id": true, "name": true, "bonus": true, "pieces.id": true, "pieces.name": true}')
+      .then(response => response.json())
+      .then(responseData => {
+        responseData.forEach(setSkill => setSkills.push({level: 0, setSkill: setSkill}))
+      })
+      .then(() => this.setState({setSkills, setSkillsIsFetching: false, setSkillsIsFetched: true}))
+      .then(() => console.log("SetSkillsFetched", this.state.setSkills))
+      .catch(error => console.log("Error while fetching data", error));
+  }
+
   getEquippedSkills = () => {
     let skills = [];
     if (this.state.skills.length !== 0) {
@@ -178,6 +201,7 @@ class Main extends Component {
 
   equipArmor(piece) {
     let updatedSkills = null;
+    let updatedSetSkills = null;
     let updatedEquippedInfo = {};
 
     if (this.state.skills.length !== 0) { // Check if the skills have been fetched
@@ -187,17 +211,21 @@ class Main extends Component {
         updatedSkills = this.updateSkill(this.state[piece.type + "Piece"], this.state.skills, true); // Remove old skills from state piece and create a new skills array 
         updatedSkills = this.updateSkill(piece, updatedSkills, false); // Add new skills from current piece using the newly created skills array
 
+        updatedSetSkills = this.updateSetSkill(this.state[piece.type + "Piece"], this.state.setSkills, true);
+        updatedSetSkills = this.updateSetSkill(piece, updatedSetSkills, false);
+
         updatedEquippedInfo = this.updateEquippedInfo(this.state[piece.type + "Piece"], this.state.equippedInfo, true) // Remove state piece equipment info and create a new equipment info array
         updatedEquippedInfo = this.updateEquippedInfo(piece, updatedEquippedInfo, false) // Add current piece equipment info using created equipment info array
       } else {
         updatedSkills = this.updateSkill(piece, this.state.skills, false); // Add new skills from current piece and create a new skills array 
+        updatedSetSkills = this.updateSetSkill(piece, this.state.setSkills, false);
         updatedEquippedInfo = this.updateEquippedInfo(piece, this.state.equippedInfo, false) // Add current piece equipment info and create a new equipment info array
       }
 
       updatedEquippedInfo = this.updateEquippedInfoBySkills(updatedEquippedInfo, this.state.skills, true)
       updatedEquippedInfo = this.updateEquippedInfoBySkills(updatedEquippedInfo, updatedSkills, false)
 
-      this.setState({ [piece.type + "Piece"]: piece, skills: updatedSkills, equippedInfo: updatedEquippedInfo});
+      this.setState({ [piece.type + "Piece"]: piece, skills: updatedSkills, setSkills: updatedSetSkills, equippedInfo: updatedEquippedInfo});
     }
   }
 
@@ -226,6 +254,31 @@ class Main extends Component {
       }
     });
     return updatedSkills;
+  }
+
+  updateSetSkill = (piece, currentSetSkills, minus) => {
+    let updatedSetSkills = [];
+    currentSetSkills.forEach((stateSetSkill) => {
+      let updatedSetSkill = null;
+      if (stateSetSkill.setSkill.id === piece.armorSet.id) {
+        let updatedLevel = minus ? (stateSetSkill.level - 1) : (stateSetSkill.level + 1);
+        updatedSetSkill = update(stateSetSkill, {level: {$set: updatedLevel}});
+        console.log(minus, updatedLevel, updatedSetSkill);
+        let TempArmorSetSkills = {armorSetSkills: {}};
+        TempArmorSetSkills = update(TempArmorSetSkills, {armorSetSkills: {$set: stateSetSkill.armorSetSkills ? stateSetSkill.armorSetSkills : {head: 0, chest: 0, gloves: 0, waist: 0, legs: 0}}});
+        this.state.types.forEach(type => {
+          if (type === piece.type) {
+            TempArmorSetSkills.armorSetSkills[type] = minus ? TempArmorSetSkills.armorSetSkills[type] - 1 : TempArmorSetSkills.armorSetSkills[type] + 1;
+          }
+        })
+        updatedSetSkill = update(updatedSetSkill, {armorSetSkills: {$set: TempArmorSetSkills.armorSetSkills}})
+        updatedSetSkills.push(updatedSetSkill);
+      }
+      if (updatedSetSkill === null) {
+        updatedSetSkills = update(updatedSetSkills, {$push: [stateSetSkill]});
+      }
+    });
+    return updatedSetSkills;
   }
 
   updateEquippedInfo = (piece, currentEquippedInfo, minus) => {
@@ -369,6 +422,8 @@ class Main extends Component {
               updatedArmorName={this.updatedArmorName}
               pieceTilePagination={this.state.pieceTilePagination}
               updatedPieceTilePagination={this.updatedPieceTilePagination.bind(this)}
+              equippedSkillTilesPagination={this.state.equippedSkillTilesPagination}
+              updatedEquippedSkillTilesPagination={this.updatedEquippedSkillTilesPagination.bind(this)}
               getPiecesFor={this.getPiecesFor}
               getPiecesTiles={this.getPiecesTiles}
               searchArmorPieces={this.searchArmorPieces.bind(this)}
@@ -376,11 +431,15 @@ class Main extends Component {
               toggleArmorSearch={this.toggleArmorSearch.bind(this)}
               searchBySkill={this.state.searchBySkill}
               setArmorRank={this.setArmorRank.bind(this)}
-              getSkills={this.getSkills}
               getEquippedSkills={this.getEquippedSkills}
+              getSkills={this.getSkills}
               skills={this.state.skills}
               skillsIsFetched={this.state.skillsIsFetched}
               skillsIsFetching={this.state.skillsIsFetching}
+              getSetSkills={this.getSetSkills}
+              setSkills={this.state.setSkills}
+              setSkillsIsFetched={this.state.setSkillsIsFetched}
+              setSkillsIsFetching={this.state.setSkillsIsFetching}
               armorRank={this.state.armorRank}
               equippedInfo={this.state.equippedInfo}
               pieces={{

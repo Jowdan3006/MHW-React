@@ -64,7 +64,7 @@ const ArmorIcon = (props) => {
   }
 
   let alt;
-  if (props.piece.rarity == 10 || props.piece.rarity == 11 || props.piece.rarity == 12) {
+  if (props.piece.rarity === 10 || props.piece.rarity === 11 || props.piece.rarity === 12) {
     alt = props.piece.rarity + "-alt-" + Math.ceil((Math.random() * 3));
   }
 

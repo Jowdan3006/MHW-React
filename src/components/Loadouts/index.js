@@ -43,12 +43,20 @@ class Loadouts extends Component {
               getSkills={this.props.getSkills}
               skillsIsFetched={this.props.skillsIsFetched}
               skillsIsFetching={this.props.skillsIsFetching}
-            />} 
+              getSetSkills={this.props.getSetSkills}
+              setSkills={this.props.setSkills}
+              setSkillsIsFetched={this.props.setSkillsIsFetched}
+              setSkillsIsFetching={this.props.setSkillsIsFetching}
+          />} 
           />
         )
       }
     )
     return armorPieces;
+  }
+
+  componentDidUpdate() {
+    
   }
 
   render() {
@@ -72,6 +80,8 @@ class Loadouts extends Component {
             />
             <EquippedSkills 
               getEquippedSkills = {this.props.getEquippedSkills}
+              updatedEquippedSkillTilesPagination = {this.props.updatedEquippedSkillTilesPagination}
+              page = {this.props.equippedSkillTilesPagination}
             />
           </Row>
         </Container>

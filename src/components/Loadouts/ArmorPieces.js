@@ -14,14 +14,21 @@ const ArmorPieces = (props) => {
     props.getSkills();
   }
 
+  if (props.piecesIsFetched && props.skillsIsFetched && !props.setSkillsIsFetching && !props.setSkillsIsFetched) {
+    props.getSetSkills();
+  }
+  
   let content;
-  if (props.piecesIsFetching) {
+
+  if (props.piecesIsFetching || !props.piecesIsFetched || !props.skillsIsFetched || !props.setSkillsIsFetched) {
     if (!props.piecesIsFetched) {
       content = <p>Fetching {props.armorType} armor pieces...</p>;
-    } else if (props.piecesIsFetched && !props.skillsIsFetched) {
-      content = <p>Fetched {props.armorType} armor pieces > Fetching skill for armor pieces...</p>
+    } else if (!props.skillsIsFetched) {
+      content = <p>Fetched {props.armorType} armor pieces > Fetching skills...</p>
+    } else if (!props.setSkillsIsFetched) {
+      content = <p>Fetched {props.armorType} armor pieces > Fetched skills > Fetching set skills...</p>
     } else {
-      content = <p>Fetched {props.armorType} armor pieces > Fetched skills > Processing {props.armorType} armor pieces</p>
+      content = <p>Fetched {props.armorType} armor pieces > Fetched skills > Fetched set skills > Processing {props.armorType} armor pieces</p>
     }
   } else {
     content = props.getPiecesTiles(props.armorType)
@@ -39,7 +46,7 @@ const ArmorPieces = (props) => {
     }
     for (let i = 1; i <= pages; i++) {
       pagination.push(
-        <Pagination.Item key={`page-${i}`} active={i === page} onClick={() => props.updatedPieceTilePagination(i)} />
+        <Pagination.Item key={`page-${i}`} active={i === page} onClick={i === page ? null : () => props.updatedPieceTilePagination(i)} />
       )
     }
   }

@@ -530,7 +530,6 @@ header {
         }
         &:hover {
           cursor: default;
-          z-index: 15;
           ~ .skillTileInfo {
             visibility: visible;
             opacity: 1;
@@ -546,6 +545,10 @@ header {
         top: 18px;
         width: 100%;
         z-index: 10;
+        &:hover {
+          visibility: visible;
+          opacity: 1;
+        }
         .skillIconBackground {
           height: 1.9rem;
           width: 100%;
@@ -553,6 +556,11 @@ header {
           background-size: 105%;
           background-position: top center;
           background-repeat: no-repeat;
+          .skillIcon {
+            position: absolute;
+            left: calc(50% - 35px);
+            top: -18px;
+          }
         }
         .skillName {
           text-align: center;
@@ -577,6 +585,7 @@ header {
 }
 
 .pagination {
+  margin-top: auto;
   justify-content: center;
   .page-item {
     .page-link {
@@ -589,7 +598,7 @@ header {
       box-shadow: 0px 0px 0px 2px #9f734c inset, 0px 0px 0px 2px #030303;
       border: none;
     }
-    &.active .page-link{
+    &.active .page-link {
       margin-top: .35rem;
       border-radius: 3px;
       padding: .6rem;
@@ -612,7 +621,24 @@ header {
 }
 
 .skillLevelInfo {
-  font-size: 1.1rem;
+  font-size: 1rem;
+  line-height: 1.25;
+  .skillLevels {
+    max-height: 8rem;
+    overflow-y: auto;
+    &::-webkit-scrollbar {
+      width: .4rem;
+    }
+    &::-webkit-scrollbar-track {
+      border: 1px solid $greyPri;
+      box-shadow: inset 0px 0px 0px 1px darken($textMain, 40%);
+      border-radius: 45% 45% 45% 45% / 5% 5% 5% 5% ;
+    }
+    &::-webkit-scrollbar-thumb {
+      border-radius: 45% 45% 45% 45% / 5% 5% 5% 5% ;
+      background-color: $textMain;
+    }
+  }
   .skillLevel {
     display: flex;
     padding-bottom: .25rem;

@@ -628,7 +628,6 @@ header .container::before {
 .equippedSkills .skillTile .skillContent .skillIcon:hover,
 .armorPieceSkills .skillTile .skillContent .skillIcon:hover {
   cursor: default;
-  z-index: 15;
 }
 
 .equippedSkills .skillTile .skillContent .skillIcon:hover ~ .skillTileInfo,
@@ -650,6 +649,12 @@ header .container::before {
   z-index: 10;
 }
 
+.equippedSkills .skillTile .skillContent .skillTileInfo:hover,
+.armorPieceSkills .skillTile .skillContent .skillTileInfo:hover {
+  visibility: visible;
+  opacity: 1;
+}
+
 .equippedSkills .skillTile .skillContent .skillTileInfo .skillIconBackground,
 .armorPieceSkills .skillTile .skillContent .skillTileInfo .skillIconBackground {
   height: 1.9rem;
@@ -658,6 +663,13 @@ header .container::before {
   background-size: 105%;
   background-position: top center;
   background-repeat: no-repeat;
+}
+
+.equippedSkills .skillTile .skillContent .skillTileInfo .skillIconBackground .skillIcon,
+.armorPieceSkills .skillTile .skillContent .skillTileInfo .skillIconBackground .skillIcon {
+  position: absolute;
+  left: calc(50% - 35px);
+  top: -18px;
 }
 
 .equippedSkills .skillTile .skillContent .skillTileInfo .skillName,
@@ -682,6 +694,7 @@ header .container::before {
 }
 
 .pagination {
+  margin-top: auto;
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
@@ -720,7 +733,29 @@ header .container::before {
 }
 
 .skillLevelInfo {
-  font-size: 1.1rem;
+  font-size: 1rem;
+  line-height: 1.25;
+}
+
+.skillLevelInfo .skillLevels {
+  max-height: 8rem;
+  overflow-y: auto;
+}
+
+.skillLevelInfo .skillLevels::-webkit-scrollbar {
+  width: .4rem;
+}
+
+.skillLevelInfo .skillLevels::-webkit-scrollbar-track {
+  border: 1px solid #262626;
+  -webkit-box-shadow: inset 0px 0px 0px 1px #777777;
+          box-shadow: inset 0px 0px 0px 1px #777777;
+  border-radius: 45% 45% 45% 45% / 5% 5% 5% 5%;
+}
+
+.skillLevelInfo .skillLevels::-webkit-scrollbar-thumb {
+  border-radius: 45% 45% 45% 45% / 5% 5% 5% 5%;
+  background-color: #ddd;
 }
 
 .skillLevelInfo .skillLevel {
