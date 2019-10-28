@@ -6,21 +6,27 @@ const ArmorPieces = (props) => {
   console.log(`${props.armorTypeCapital}Pieces Render`);
 
   //retrieve initial data
-  if (!props.piecesIsFetching && !props.piecesIsFetched) {
-    props.getPiecesFor(props.armorType);
-  }
+  // if (!props.piecesIsFetching && !props.piecesIsFetched) {
+  //   props.getPiecesFor(props.armorType);
+  // }
 
-  if (props.piecesIsFetched && !props.skillsIsFetching && !props.skillsIsFetched) {
-    props.getSkills();
-  }
+  // if (props.piecesIsFetched && !props.skillsIsFetching && !props.skillsIsFetched) {
+  //   props.getSkills();
+  // }
 
-  if (props.piecesIsFetched && props.skillsIsFetched && !props.setSkillsIsFetching && !props.setSkillsIsFetched) {
-    props.getSetSkills();
-  }
+  // if (props.piecesIsFetched && props.skillsIsFetched && !props.setSkillsIsFetching && !props.setSkillsIsFetched) {
+  //   props.getSetSkills();
+  // }
+
+  // if (props.piecesIsFetched && props.skillsIsFetched && props.setSkillsIsFetched && !props.preCalculatePieceInformationIsDone && !props.preCalculatePieceInformationInProgress) {
+  //   props.preCalculatePieceInformation();
+  // }
+  
+  props.fetchProcess()
   
   let content;
 
-  if (props.piecesIsFetching || !props.piecesIsFetched || !props.skillsIsFetched || !props.setSkillsIsFetched) {
+  if (!props.piecesIsFetched || !props.skillsIsFetched || !props.setSkillsIsFetched || !props.preCalculatePieceInformationIsDone) {
     if (!props.piecesIsFetched) {
       content = <p>Fetching {props.armorType} armor pieces...</p>;
     } else if (!props.skillsIsFetched) {

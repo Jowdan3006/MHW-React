@@ -661,6 +661,15 @@ header {
   }
 }
 
+.searchInfo {
+  color: $textMain;
+  list-style: none;
+  padding: 0;
+  li {
+    padding-bottom: .5rem;
+  }
+}
+
 .levelBreakdown {
   padding-bottom: 6px;
   border-bottom: #494949 dashed 2px;

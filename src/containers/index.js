@@ -5,6 +5,7 @@ import {
 } from "react-router-dom";
 
 import update from 'immutability-helper';
+import LoadingBar from 'react-top-loading-bar';
 
 import Header from "../components/Header";
 import MonsterList from "../components/MonsterList/";
@@ -17,30 +18,41 @@ class Main extends Component {
     types: ['head', 'chest', 'gloves', 'waist', 'legs'],
     pieceTilePagination: 1,
     equippedSkillTilesPagination: 1,
+    loadingBarProgress: 0,
 
     headPieces: [],
     headPiecesIsFetching: false,
     headPiecesIsFetched: false,
+    headPiecesInfoCalculateInProgress: false,
+    headPiecesInfoIsCalculated: false,
     headPiece: null,
 
     chestPieces: [],
     chestPiecesIsFetching: false,
     chestPiecesIsFetched: false,
+    chestPiecesInfoCalculateInProgress: false,
+    chestPiecesInfoIsCalculated: false,
     chestPiece: null,
 
     glovesPieces: [],
     glovesPiecesIsFetching: false,
     glovesPiecesIsFetched: false,
+    glovesPiecesInfoCalculateInProgress: false,
+    glovesPiecesInfoIsCalculated: false,
     glovesPiece: null,
 
     waistPieces: [],
     waistPiecesIsFetching: false,
     waistPiecesIsFetched: false,
+    waistPiecesInfoCalculateInProgress: false,
+    waistPiecesInfoIsCalculated: false,
     waistPiece: null,
 
     legsPieces: [],
     legsPiecesIsFetching: false,
     legsPiecesIsFetched: false,
+    legsPiecesInfoCalculateInProgress: false,
+    legsPiecesInfoIsCalculated: false,
     legsPiece: null,
 
     skills: [],
@@ -84,35 +96,61 @@ class Main extends Component {
     console.log("Main Mounted");
   }
 
-  updatedPieceTilePagination(page) {
-    this.setState({pieceTilePagination: page});
-  }
-
-  updatedEquippedSkillTilesPagination(page) {
-    this.setState({equippedSkillTilesPagination: page});
-  }
-
-  getPiecesFor = (piece) => {
+  getPiecesFor = async (piece) => {
     let pieces = piece + 'Pieces';
-    this.setState({[pieces + 'IsFetching']: true});
+    this.setState({[pieces + 'IsFetching']: true, loadingBarProgress: 20});
+    console.log("LoadingBarProgress: Piece Fetching",this.state.loadingBarProgress)
     console.log(pieces + "IsFetching");
     let url = `https://mhw-db.com/armor?q={"type": "${piece}"}`
-    fetch(url)
+    await fetch(url)
       .then((response) => { this.setState({[pieces + 'IsFetched']: true}); return response.json(); })
-      .then((response) => {
-        let armorPieces = [];
-        response.forEach(piece => {
-          let skillNames = [];
-          piece.skills.forEach(skill => {
-            skillNames = skillNames.concat(skill.skillName.toLowerCase().split(" "));
-          })
-          piece.skillNames = skillNames;
-          armorPieces.push(piece);
-        })
-        this.setState({ [pieces]: armorPieces, [pieces + 'IsFetching']: false})
-      })
+      .then((response) => { this.setState({ [pieces]: response, [pieces + 'IsFetching']: false, loadingBarProgress: this.state.skills.length === 0 ? this.state.loadingBarProgress + 20 : 80 }); console.log("LoadingBarProgress: Piece Fetch",this.state.loadingBarProgress) })
       .then(() => { console.log(pieces + "Fetched", this.state[pieces]); })
       .catch(error => console.log("Error while fetching data", error))
+  }
+
+  getSkills = async () => {
+    console.log("SkillsIsFetching")
+    this.setState({skillsIsFetching: true})
+    let skills = [];
+    await fetch('https://mhw-db.com/skills')
+      .then(response => response.json())
+      .then(responseData => {
+        responseData.forEach(skill => skills.push({id: skill.id, level: 0, skill: skill}))
+      })
+      .then(() => {this.setState({skills: skills.reverse(), skillsIsFetching: false, skillsIsFetched: true, loadingBarProgress: this.state.loadingBarProgress + 20}); console.log("LoadingBarProgress: Skills Fetch",this.state.loadingBarProgress)})
+      .then(() => console.log("SkillsFetched", this.state.skills))
+      .catch(error => console.log("Error while fetching data", error));
+  }
+
+  getSetSkills = async () => {
+    console.log("SetSkillsIsFetching")
+    this.setState({setSkillsIsFetching: true})
+    let setSkills = [];
+    await fetch('https://mhw-db.com/armor/sets?p={"id": true, "name": true, "bonus": true, "pieces.id": true, "pieces.name": true}')
+      .then(response => response.json())
+      .then(responseData => {
+        responseData.forEach(setSkill => setSkills.push({level: 0, setSkill: setSkill}))
+      })
+      .then(() => {this.setState({setSkills: setSkills, setSkillsIsFetching: false, setSkillsIsFetched: true, loadingBarProgress: this.state.loadingBarProgress + 20}); console.log("LoadingBarProgress: SetSkills Fetch",this.state.loadingBarProgress)})
+      .then(() => console.log("SetSkillsFetched", this.state.setSkills))
+      .catch(error => console.log("Error while fetching data", error));
+  }
+
+  preCalculatePieceInformation = (type) => {
+    let pieces = type + 'Pieces';
+    this.setState({ [pieces + "InfoCalculateInProgress"]: true });
+    console.log(pieces + "IsCalculating", this.state.setSkillsIsFetched);
+
+    let armorPieces = [];
+    this.state[pieces].forEach(piece => {
+      let skillNames = [];
+      piece.skills.forEach(skill => {
+        skillNames = skillNames.concat(skill.skillName.toLowerCase().split(" "));
+      })
+      armorPieces.push(update(piece, {skillNames: {$set: skillNames}}));
+    })
+    this.setState({[pieces]: armorPieces, [pieces + "InfoCalculateInProgress"]: false, [pieces + "InfoIsCalculated"]: true, loadingBarProgress: 100})
   }
 
   getPiecesTiles = (piece) => {
@@ -159,32 +197,12 @@ class Main extends Component {
     this.setState({armorRank: rank, pieceTilePagination: 1})
   }
 
-  getSkills = async () => {
-    console.log("SkillsIsFetching")
-    this.setState({skillsIsFetching: true})
-    let skills = [];
-    await fetch('https://mhw-db.com/skills')
-      .then(response => response.json())
-      .then(responseData => {
-        responseData.forEach(skill => skills.push({id: skill.id, level: 0, skill: skill}))
-      })
-      .then(() => this.setState({skills: skills.reverse(), skillsIsFetching: false, skillsIsFetched: true}))
-      .then(() => console.log("SkillsFetched", this.state.skills))
-      .catch(error => console.log("Error while fetching data", error));
+  updatedPieceTilePagination(page) {
+    this.setState({pieceTilePagination: page});
   }
 
-  getSetSkills = async () => {
-    console.log("SetSkillsIsFetching")
-    this.setState({setSkillsIsFetching: true})
-    let setSkills = [];
-    await fetch('https://mhw-db.com/armor/sets?p={"id": true, "name": true, "bonus": true, "pieces.id": true, "pieces.name": true}')
-      .then(response => response.json())
-      .then(responseData => {
-        responseData.forEach(setSkill => setSkills.push({level: 0, setSkill: setSkill}))
-      })
-      .then(() => this.setState({setSkills, setSkillsIsFetching: false, setSkillsIsFetched: true}))
-      .then(() => console.log("SetSkillsFetched", this.state.setSkills))
-      .catch(error => console.log("Error while fetching data", error));
+  updatedEquippedSkillTilesPagination(page) {
+    this.setState({equippedSkillTilesPagination: page});
   }
 
   getEquippedSkills = () => {
@@ -401,10 +419,18 @@ class Main extends Component {
     this.setState({ monsterSearchValue: event.target.value});
   }
 
+  onLoaderFinished = () => {
+    this.setState({loadingBarProgress: 0})
+  }
+
   render() {
     console.log("Main Render");
     return (
       <HashRouter>
+        <LoadingBar 
+          progress={this.state.loadingBarProgress}
+          onLoaderFinished={() => this.onLoaderFinished()}
+        />
         <Header />
         <div className="content">
           <Route path="/MonsterList" render={() => 
@@ -419,6 +445,7 @@ class Main extends Component {
           />
           <Route path="/Loadouts" render={(match) =>
             <Loadouts
+              types={this.state.types}
               updatedArmorName={this.updatedArmorName}
               pieceTilePagination={this.state.pieceTilePagination}
               updatedPieceTilePagination={this.updatedPieceTilePagination.bind(this)}
@@ -470,6 +497,21 @@ class Main extends Component {
                 waist: this.state.waistPiecesIsFetched, 
                 legs: this.state.legsPiecesIsFetched
               }}
+              preCalculatePieceInformationIsDone = {{
+                head: this.state.headPiecesInfoIsCalculated, 
+                chest: this.state.chestPiecesInfoIsCalculated, 
+                gloves: this.state.glovesPiecesInfoIsCalculated, 
+                waist: this.state.waistPiecesInfoIsCalculated, 
+                legs: this.state.legsPiecesInfoIsCalculated
+              }}
+              preCalculatePieceInformationInProgress = {{
+                head: this.state.headPiecesInfoCalculateInProgress, 
+                chest: this.state.chestPiecesInfoCalculateInProgress, 
+                gloves: this.state.glovesPiecesInfoCalculateInProgress, 
+                waist: this.state.waistPiecesInfoCalculateInProgress, 
+                legs: this.state.legsPiecesInfoCalculateInProgress
+              }}
+              preCalculatePieceInformation = {this.preCalculatePieceInformation.bind(this)}
               match={match.match}
             />}
           />
